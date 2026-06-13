@@ -1,0 +1,1008 @@
+﻿@rendermode InteractiveServer
+@page "/dashboard-mentor"
+
+<PageTitle>MentoRate — Кабинет Наставника</PageTitle>
+
+<div class="mentor-container">
+
+    @* ВЕРХНЯЯ ПАНЕЛЬ *@
+    <header class="mentor-header border-box">
+        <div class="user-id">
+            ID: 541 | <b>Пользователь:</b> Иванов П.С. (Старший наставник)
+        </div>
+        <a href="/" class="btn-logout">Выйти</a>
+    </header>
+
+    @* ДВУХКОЛОНОЧНАЯ СЕТКА *@
+    <div class="mentor-grid">
+
+        @* ЛЕВАЯ КОЛОНКА *@
+        <aside class="left-col">
+            <div class="border-box mb-20">
+                <h5 class="col-title">Мои подопечные (Лимит 3)</h5>
+                <div class="border-box mb-20">
+                    <h5 class="col-title">Мои подопечные (Лимит 3)</h5>
+                    <div class="student-list">
+                        @foreach (var student in Students)
+                        {
+                            <div class="student-item @(student.Id == selectedStudentId ? "active" : "text-muted")"
+                                 @onclick="() => SelectStudent(student.Id)">
+                                <span class="student-name">@student.Name @(student.Id == selectedStudentId ? "[ВЫБРАН]" : "")</span>
+                                <span class="student-progress">Прогресс МЛ: @student.Progress%</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="border-box">
+                <h5 class="col-title">🏆 ОБЩИЙ ЗАЧЕТ НАСТАВНИКОВ</h5>
+                <p class="score-text">Мои баллы за квартал: <b>340 очков</b></p>
+            </div>
+        </aside>
+
+        @* ПРАВАЯ КОЛОНКА *@
+        <main class="right-col border-box">
+            <div class="ml-header">
+                <h4> Маршрутный лист (@GetSelectedStudentName())</h4>
+                <div class="ml-actions">
+                    <button class="btn-black">Редактировать МЛ</button>
+                    <button class="btn-outline">Выгрузить в PDF</button>
+                </div>
+            </div>
+            <!-- --- БЛОК СТАРТ. МОЯ ЦЕЛЬ НА КВАРТАЛ --- -->
+            <div class="start-block">
+                <h5 class="start-title">СТАРТ. МОЯ ЦЕЛЬ НА КВАРТАЛ</h5>
+                <p class="start-subtitle">Что подросток хочет попробовать за эти 3 месяца? (Выберите 1-3 пункта):</p>
+
+                <div class="start-checkbox-group">
+                    <label class="start-check-label">
+                        <input type="checkbox" checked /> Найти дело, которое мне нравится
+                    </label>
+                    <label class="start-check-label">
+                        <input type="checkbox" /> Перестать срываться на конфликты
+                    </label>
+                    <label class="start-check-label">
+                        <input type="checkbox" checked /> Найти компанию, где меня не будут давить
+                    </label>
+                    <label class="start-check-label">
+                        <input type="checkbox" /> Попробовать заработать или помочь другим
+                    </label>
+                    <label class="start-check-label">
+                        <input type="checkbox" @bind="isCustomGoalChecked" /> Своё:
+                        <input type="text" class="custom-goal-input" placeholder="Впишите индивидуальную цель..." @bind="customGoalText" disabled="@(!isCustomGoalChecked)" />
+                    </label>
+
+                </div>
+
+                <div class="start-input-group">
+                    <label class="start-input-label">Стартовая точка (честно сам(а) себе):</label>
+                    <input type="text" class="start-form-input" placeholder="Введите текущее состояние подростка..." value="Апатия, ничего не хочется делать в свободное время." />
+                </div>
+
+                <div class="start-input-group">
+                    <label class="start-input-label">Сейчас я чувствую, что моя главная проблема —</label>
+                    <input type="text" class="start-form-input" placeholder="В чем главная сложность..." value="Нет компании и увлечений, которые бы зажигали." />
+                </div>
+            </div>
+
+
+            @* --- БЛОК: УРОВЕНЬ 1. Я ДЛЯ СЕБЯ --- *@
+            <div class="ml-section mt-30">
+                <h5 class="section-title">УРОВЕНЬ 1. Я ДЛЯ СЕБЯ (МОЕ РАЗВИТИЕ)</h5>
+                <p class="section-subtitle">Проектирование шагов: что пробуем, как реализуем и сколько баллов за это даем.</p>
+
+                <table class="ml-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 35%">Что планируем (мероприятие/действие)</th>
+                            <th style="width: 35%">Как осуществляем (первый шаг)</th>
+                            <th style="width: 15%">Дата выполнения</th>
+                            <th style="width: 15%">Баллы</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var act in Level1Activities)
+                        {
+                            <tr>
+                                <td>
+                                    <input type="text" @bind="act.What" class="table-input" placeholder="Например: Секция самбо" />
+                                </td>
+                                <td>
+                                    <input type="text" @bind="act.How" class="table-input" placeholder="Например: Сходить на пробную тренировку" />
+                                </td>
+                                <td>
+                                    <input type="text"
+                                           @bind="act.Date"
+                                           class="table-input date-input"
+                                           placeholder="ДД.ММ.ГГГГ"
+                                           maxlength="10"
+                                           pattern="\d{2}\.\d{2}\.\d{4}"
+                                           title="Введите дату в формате ДД.ММ.ГГГГ (например, 13.06.2026)" />
+                                </td>
+
+                                <td>
+                                    <select @bind="act.Points" class="table-select">
+                                        <option value="10">10 б (Участие)</option>
+                                        <option value="20">20 б (Активность)</option>
+                                        <option value="30">30 б (Инициатива)</option>
+                                        <option value="40">40 б (Помощь)</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                @* Интерактивная кнопка, которая будет добавлять новые строчки в таблицу *@
+                <button class="btn-outline add-row-btn" @onclick="AddLevel1Row">
+                    [ + Добавить мероприятие в Уровень 1 ]
+                </button>
+                <!-- --- БЛОК: МОЯ ЛИЧНАЯ ПОБЕДА НА ЭТОМ УРОВНЕ (УРОВЕНЬ 1) --- -->
+                <div class="victory-block">
+                    <h6 class="victory-title">Моя личная победа на этом уровне:</h6>
+
+                    <div class="victory-list">
+                        @* Пункт 1 *@
+                        <label class="victory-item">
+                            <input type="checkbox" class="victory-check" />
+                            <span class="victory-text">Я выбрал(а) минимум 1 активность, которая мне реально понравилась.</span>
+                        </label>
+
+                        @* Пункт 2 *@
+                        <label class="victory-item">
+                            <input type="checkbox" class="victory-check" />
+                            <span class="victory-text">Я посетил(а) мероприятие без принуждения (хотя бы 1 раз).</span>
+                        </label>
+
+                        @* Свободная линия 1 *@
+                        <label class="victory-item">
+                            <input type="checkbox" class="victory-check" />
+                            <input type="text" class="line-input" placeholder="Нажмите, чтобы вписать свою победу..." />
+                        </label>
+
+                        @* Свободная линия 2 *@
+                        <label class="victory-item">
+                            <input type="checkbox" class="victory-check" />
+                            <input type="text" class="line-input" />
+                        </label>
+
+                        @* Свободная линия 3 *@
+                        <label class="victory-item">
+                            <input type="checkbox" class="victory-check" />
+                            <input type="text" class="line-input" />
+                        </label>
+                    </div>
+                </div>
+
+                
+
+
+                <!-- --- БЛОК: УРОВЕНЬ 2. ДЛЯ СЕМЬИ И ДРУЗЕЙ --- -->
+                <div class="start-block">
+                    <h5 class="level-title">УРОВЕНЬ 2. ДЛЯ СЕМЬИ И ДРУЗЕЙ</h5>
+                    <p class="section-subtitle">Проектирование совместных шагов с близкими, родными и окружением:</p>
+
+                    <table class="ml-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 35%">Что планируем (мероприятие/действие)</th>
+                                <th style="width: 35%">Как осуществляем (первый шаг)</th>
+                                <th style="width: 15%">Дата выполнения</th>
+                                <th style="width: 15%">Баллы</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Level2Activities != null)
+                            {
+                                @foreach (var act in Level2Activities)
+                                {
+                                    <tr>
+                                        <td><input type="text" @bind="act.What" class="table-input" placeholder="Например: Помощь по дому" /></td>
+                                        <td><input type="text" @bind="act.How" class="table-input" placeholder="Например: Составить график уборки" /></td>
+                                        <td>
+                                            <input type="text"
+                                                   @bind="act.Date"
+                                                   class="table-input date-input"
+                                                   placeholder="ДД.ММ.ГГГГ"
+                                                   maxlength="10"
+                                                   pattern="\d{2}\.\d{2}\.\d{4}"
+                                                   title="Введите дату в формате ДД.ММ.ГГГГ (например, 13.06.2026)" />
+                                        </td>
+
+
+                                        <td>
+                                            <select @bind="act.Points" class="table-select">
+                                                <option value="10">10 б</option>
+                                                <option value="20">20 б</option>
+                                                <option value="30">30 б</option>
+                                                <option value="40">40 б</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                    <button class="btn-outline add-row-btn" @onclick="AddLevel2Row">
+                        [ + Добавить мероприятие в Уровень 2 ]
+                    </button>
+                    <!-- --- БЛОК: МОЯ ЛИЧНАЯ ПОБЕДА НА ЭТОМ УРОВНЕ --- -->
+                    <div class="victory-block">
+                        <h6 class="victory-title">Моя личная победа на этом уровне:</h6>
+
+                        <div class="victory-list">
+                            @* Строка 1: Специфическая цель со встроенным вводом цифры *@
+                            <label class="victory-item">
+                                <input type="checkbox" class="victory-check" />
+                                <span class="victory-text">
+                                    Я посетил(а)
+                                    <input type="text" class="inline-number-input" placeholder="___" />
+                                    мероприятий в компании со своими родителями
+                                </span>
+                            </label>
+
+                            @* Строка 2: Пустая строка с линией под чекбокс *@
+                            <label class="victory-item">
+                                <input type="checkbox" class="victory-check" />
+                                <input type="text" class="line-input" placeholder="Нажмите, чтобы вписать свою победу..." />
+                            </label>
+
+                            @* Строка 3: Пустая строка с линией под чекбокс *@
+                            <label class="victory-item">
+                                <input type="checkbox" class="victory-check" />
+                                <input type="text" class="line-input" />
+                            </label>
+
+                            @* Строка 4: Пустая строка с линией под чекбокс *@
+                            <label class="victory-item">
+                                <input type="checkbox" class="victory-check" />
+                                <input type="text" class="line-input" />
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- --- БЛОК: УРОВЕНЬ 3. ДЛЯ МИРА (ПРОЕКТ / ДОБРОЕ ДЕЛО) --- -->
+                <div class="start-block">
+                    <h5 class="level-title">УРОВЕНЬ 3. ДЛЯ МИРА (ПРОЕКТ / ДОБРОЕ ДЕЛО)</h5>
+                    <p class="section-subtitle">Проектирование пользы для окружающего мира, школы, района или общества:</p>
+
+                    <table class="ml-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 35%">What планируем (мероприятие/действие)</th>
+                                <th style="width: 35%">Как осуществляем (первый шаг)</th>
+                                <th style="width: 15%">Дата выполнения</th>
+                                <th style="width: 15%">Баллы</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Level3Activities != null)
+                            {
+                                @foreach (var act in Level3Activities)
+                                {
+                                    <tr>
+                                        <td><input type="text" @bind="act.What" class="table-input" placeholder="Например: Субботник во дворе" /></td>
+                                        <td><input type="text" @bind="act.How" class="table-input" placeholder="Например: Собрать соседей" /></td>
+                                        <td>
+                                            <input type="text"
+                                                   @bind="act.Date"
+                                                   @bind:event="onchange"
+                                                   @onkeypress="BlockNonDigits"
+                                                   @oninput="(e) => InsertDotsOnFly(e, act)"
+                                                   class="table-input"
+                                                   placeholder="ДД.ММ.ГГГГ"
+                                                   maxlength="10" />
+                                        </td>
+
+
+                                        <td>
+                                            <select @bind="act.Points" class="table-select">
+                                                <option value="10">10 б</option>
+                                                <option value="20">20 б</option>
+                                                <option value="30">30 б</option>
+                                                <option value="40">40 б</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                    <button class="btn-outline add-row-btn" @onclick="AddLevel3Row">
+                        [ + Добавить мероприятие в Уровень 3 ]
+                    </button>
+                    <!-- --- БЛОК: МОЯ ЛИЧНАЯ ПОБЕДА НА ЭТОМ УРОВНЕ (УРОВЕНЬ 3) --- -->
+                    <div class="victory-block">
+                        <h6 class="victory-title">Моя личная победа на этом уровне:</h6>
+
+                        <div class="victory-list">
+                            @* Пункт 1 *@
+                            <label class="victory-item">
+                                <input type="checkbox" class="victory-check" />
+                                <span class="victory-text">Я совершил(а) хотя бы 1 добровольческое действие.</span>
+                            </label>
+
+                            @* Пункт 2 *@
+                            <label class="victory-item">
+                                <input type="checkbox" class="victory-check" />
+                                <span class="victory-text">Я увидел(а) результат своей помощи (обратная связь, благодарность).</span>
+                            </label>
+
+                            @* Свободная линия 1 *@
+                            <label class="victory-item">
+                                <input type="checkbox" class="victory-check" />
+                                <input type="text" class="line-input" placeholder="Нажмите, чтобы вписать свою победу..." />
+                            </label>
+
+                            @* Свободная линия 2 *@
+                            <label class="victory-item">
+                                <input type="checkbox" class="victory-check" />
+                                <input type="text" class="line-input" />
+                            </label>
+
+                            @* Свободная линия 3 *@
+                            <label class="victory-item">
+                                <input type="checkbox" class="victory-check" />
+                                <input type="text" class="line-input" />
+                            </label>
+                        </div>
+                    </div>
+
+
+                </div>
+                <!-- --- БЛОК 5: ИТОГИ КВАРТАЛА (СТРОГО ПО ШАБЛОНУ) --- -->
+                <div class="start-block" style="border-bottom: none; margin-bottom: 0; padding-bottom: 0;">
+                    <h5 class="level-title">ИТОГИ КВАРТАЛА</h5>
+                    <p class="section-subtitle"><b>Мой прогресс по КЛЮЧЕВЫМ ПОКАЗАТЕЛЯМ</b></p>
+
+                    <table class="ml-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 35%">Показатель</th>
+                                <th style="width: 35%">Как это у меня</th>
+                                <th style="width: 30%">Результат за квартал</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @* Строка 1 *@
+                            <tr>
+                                <td>Я выполнял(а) план</td>
+                                <td><input type="text" @bind="howPlan" class="table-input" placeholder="Комментарий..." /></td>
+                                <td class="radio-cell">
+                                    <label class="radio-label"><input type="radio" name="res_plan" @onchange='() => resPlan = "yes"' checked /> Да</label>
+                                    <label class="radio-label"><input type="radio" name="res_plan" @onchange='() => resPlan = "partially"' /> Частично</label>
+                                    <label class="radio-label"><input type="radio" name="res_plan" @onchange='() => resPlan = "no"' /> Нет</label>
+                                </td>
+                            </tr>
+                            @* Строка 2 *@
+                            <tr>
+                                <td>Я посещал(а) школу без пропусков</td>
+                                <td><input type="text" @bind="howSchool" class="table-input" placeholder="Комментарий..." /></td>
+                                <td class="radio-cell">
+                                    <label class="radio-label"><input type="radio" name="res_school" @onchange='() => resSchool = "yes"' /> Да</label>
+                                    <label class="radio-label"><input type="radio" name="res_school" @onchange='() => resSchool = "partially"' checked /> Частично</label>
+                                    <label class="radio-label"><input type="radio" name="res_school" @onchange='() => resSchool = "no"' /> Нет</label>
+                                </td>
+                            </tr>
+                            @* Строка 3 *@
+                            <tr>
+                                <td>Я не лез(ла) в конфликты</td>
+                                <td><input type="text" @bind="howConflict" class="table-input" placeholder="Комментарий..." /></td>
+                                <td class="radio-cell">
+                                    <label class="radio-label"><input type="radio" name="res_conflict" @onchange='() => resConflict = "yes"' checked /> Да</label>
+                                    <label class="radio-label"><input type="radio" name="res_conflict" @onchange='() => resConflict = "partially"' /> Частично</label>
+                                    <label class="radio-label"><input type="radio" name="res_conflict" @onchange='() => resConflict = "no"' /> Нет</label>
+                                </td>
+                            </tr>
+                            @* Строка 4 *@
+                            <tr>
+                                <td>Я не нарушал(а) закон</td>
+                                <td><input type="text" @bind="howLaw" class="table-input" placeholder="Комментарий..." /></td>
+                                <td class="radio-cell">
+                                    <label class="radio-label"><input type="radio" name="res_law" @onchange='() => resLaw = "yes"' checked /> Да</label>
+                                    <label class="radio-label"><input type="radio" name="res_law" @onchange='() => resLaw = "partially"' /> Частично</label>
+                                    <label class="radio-label"><input type="radio" name="res_law" @onchange='() => resLaw = "no"' /> Нет</label>
+                                </td>
+                            </tr>
+                            @* Строка 5 *@
+                            <tr>
+                                <td>У меня есть занятие по душе</td>
+                                <td><input type="text" @bind="howHobby" class="table-input" placeholder="Комментарий..." /></td>
+                                <td class="radio-cell">
+                                    <label class="radio-label"><input type="radio" name="res_hobby" @onchange='() => resHobby = "yes"' checked /> Да</label>
+                                    <label class="radio-label"><input type="radio" name="res_hobby" @onchange='() => resHobby = "partially"' /> Частично</label>
+                                    <label class="radio-label"><input type="radio" name="res_hobby" @onchange='() => resHobby = "no"' /> Нет</label>
+                                </td>
+                            </tr>
+                            @* Строка 6 *@
+                            <tr>
+                                <td>Я проводил(а) время с родителями</td>
+                                <td><input type="text" @bind="howParents" class="table-input" placeholder="Комментарий..." /></td>
+                                <td class="radio-cell">
+                                    <label class="radio-label"><input type="radio" name="res_parents" @onchange='() => resParents = "yes"' checked /> Да</label>
+                                    <label class="radio-label"><input type="radio" name="res_parents" @onchange='() => resParents = "partially"' /> Частично</label>
+                                    <label class="radio-label"><input type="radio" name="res_parents" @onchange='() => resParents = "no"' /> Нет</label>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- --- БЛОК 6: МОЙ ВЫХОД В «ДВИЖЕНИЕ ПЕРВЫХ» --- -->
+                    <div class="movement-block" style="margin-top: 30px;">
+                        <h5 class="level-title">МОЙ ВЫХОД В «ДВИЖЕНИЕ ПЕРВЫХ»</h5>
+                        <p class="section-subtitle"><b>Мне больше всего откликнулось (выбери 1-3):</b></p>
+
+                        <div class="movement-checkbox-grid">
+                            <label class="start-check-label"><input type="checkbox" /> Образование и знания</label>
+                            <label class="start-check-label"><input type="checkbox" /> Наука и технологии</label>
+                            <label class="start-check-label"><input type="checkbox" /> Труд и свое дело</label>
+                            <label class="start-check-label"><input type="checkbox" /> Культура и искусство</label>
+                            <label class="start-check-label"><input type="checkbox" /> Волонтерство</label>
+                            <label class="start-check-label"><input type="checkbox" /> Патриотизм</label>
+                            <label class="start-check-label"><input type="checkbox" /> Спорт</label>
+                            <label class="start-check-label"><input type="checkbox" /> ЗОЖ</label>
+                            <label class="start-check-label"><input type="checkbox" /> Медиа</label>
+                            <label class="start-check-label"><input type="checkbox" /> Экология</label>
+                            <label class="start-check-label"><input type="checkbox" /> Дипломатия</label>
+                            <label class="start-check-label"><input type="checkbox" /> Туризм</label>
+                        </div>
+
+                        @* Финальный следующий шаг с бланковой линией *@
+                        <div class="next-step-group" style="margin-top: 25px;">
+                            <label class="start-input-label"><b>Мой следующий шаг (конкретное действие на следующий квартал):</b></label>
+                            <input type="text" class="line-input" style="width: 100%; margin-top: 10px;" placeholder="Нажмите, чтобы вписать действие..." />
+                        </div>
+                    </div>
+                    <!-- --- РЕШЕНИЕ НА СЛЕДУЮЩИЙ КВАРТАЛ --- -->
+                    <div class="decision-block" style="margin-top: 35px; border-top: 1px dashed #ccc; padding-top: 25px;">
+                        <h5 class="level-title">РЕШЕНИЕ НА СЛЕДУЮЩИЙ КВАРТАЛ</h5>
+
+                        <div class="victory-list" style="margin-top: 15px;">
+                            <label class="victory-item">
+                                <input type="radio" name="next_quarter_decision" class="victory-check" checked />
+                                <span class="victory-text">Продолжаем — всё в порядке, идем дальше по тому же треку.</span>
+                            </label>
+
+                            <label class="victory-item">
+                                <input type="radio" name="next_quarter_decision" class="victory-check" />
+                                <span class="victory-text">
+                                    Корректируем план — что-то пошло не так, меняем активности (что именно:
+                                    <input type="text" class="line-input" style="width: 350px; flex-grow: 0;" placeholder="Впишите изменения..." />)
+                                </span>
+                            </label>
+
+                            <label class="victory-item">
+                                <input type="radio" name="next_quarter_decision" class="victory-check" />
+                                <span class="victory-text">Нужна помощь координатора — красный уровень, встречаемся все вместе.</span>
+                            </label>
+                        </div>
+
+                        @* Игровой блок баллов самого наставника *@
+                        <div class="mentor-rewards-text" style="margin-top: 35px; font-style: italic; font-size: 15px;">
+                            Наставник: за этот квартал я получил
+                            <input type="text" class="inline-number-input" style="width: 50px;" value="340" />
+                            баллов, мой ранг —
+                            <input type="text" class="inline-number-input" style="width: 100px;" value="Эксперт" />.
+                            Моя награда —
+                            <input type="text" class="inline-number-input" style="width: 120px;" placeholder="укажите мерч..." />.
+                            Спасибо тебе за общий результат!
+                        </div>
+
+                        @* Блок подписей сторон *@
+                        <div class="signatures-group" style="margin-top: 40px; display: flex; flex-direction: column; gap: 15px;">
+                            <h6 class="victory-title" style="margin-bottom: 5px;">Подписи:</h6>
+
+                            <div class="signature-row">
+                                <span class="sig-label">Наставляемый:</span>
+                                <input type="text" class="line-input" style="max-width: 250px;" />
+                            </div>
+                            <div class="signature-row">
+                                <span class="sig-label">Наставник:</span>
+                                <input type="text" class="line-input" style="max-width: 250px;" />
+                            </div>
+                            <div class="signature-row">
+                                <span class="sig-label">Дата:</span>
+                                <input type="text" class="line-input" style="max-width: 150px;" value="13.06.2026" />
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+
+            </div>
+
+        </main>
+
+    </div>
+</div>
+
+        <style>
+            .mentor-container {
+    font-family: Arial, sans-serif;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 15px;
+    color: #000;
+    box-sizing: border-box;
+}
+
+.border-box {
+    border: 1px solid #ccc;
+    padding: 20px;
+    background: #fff;
+    box-sizing: border-box;
+}
+
+.mb-20 {
+    margin-bottom: 20px;
+}
+
+/* Верхняя панель */
+.mentor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.btn-logout {
+    color: #f44336;
+    font-weight: bold;
+    text-decoration: none;
+    border: 1px solid #ccc;
+    padding: 5px 15px;
+}
+
+/* Сетка на две колонки */
+.mentor-grid {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 20px;
+}
+
+.col-title {
+    font-size: 14px;
+    margin: 0 0 15px 0;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
+.student-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.student-item {
+    padding: 12px;
+    border: 1px solid #eee;
+}
+
+.student-item.active {
+    border: 1px solid #000;
+    background: #f9f9f9;
+    font-weight: bold;
+}
+
+.text-muted {
+    opacity: 0.5;
+}
+
+.score-text {
+    margin: 0;
+    font-size: 14px;
+}
+
+/* Правая часть */
+.ml-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+}
+
+.ml-header h4 {
+    margin: 0;
+}
+
+    .start-block {
+        margin-bottom: 35px; /* Хороший отступ снизу, чтобы отделиться от Уровня 1 */
+        padding-bottom: 25px;
+        border-bottom: 1px dashed #ccc; /* Аккуратный пунктир между Стартом и Уровнем 1 */
+    }
+
+    .start-title {
+        font-size: 15px;
+        font-weight: bold;
+        margin: 0 0 10px 0;
+        letter-spacing: 0.5px;
+    }
+
+    .start-subtitle {
+        font-size: 13px;
+        color: #666;
+        margin: 0 0 15px 0;
+    }
+
+    .start-checkbox-group {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .start-check-label {
+        font-size: 14px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .start-input-group {
+        margin-bottom: 15px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .start-input-label {
+        font-size: 13px;
+        font-weight: bold;
+    }
+
+    .start-form-input {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+        box-sizing: border-box;
+    }
+    .custom-goal-input {
+        border: none;
+        border-bottom: 1px solid #000; /* Стильная линия вместо жесткой рамки */
+        padding: 2px 5px;
+        font-size: 14px;
+        width: 300px;
+        background: transparent;
+    }
+
+        .custom-goal-input:disabled {
+            border-bottom-color: #ccc;
+            color: #999;
+        }
+
+
+
+.ml-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-black {
+    background: #000;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-outline {
+    background: #fff;
+    color: #000;
+    border: 1px solid #000;
+    padding: 8px 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.ml-placeholder {
+    border: 2px dashed #ccc;
+    padding: 40px;
+    text-align: center;
+    color: #666;
+    background: #fafafa;
+}
+    .mt-30 {
+        margin-top: 30px;
+    }
+
+    /* Стилизация интерактивной таблицы */
+    .ml-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+
+        .ml-table th, .ml-table td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            font-size: 14px;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        .ml-table th {
+            background: #f9f9f9;
+            font-weight: bold;
+        }
+
+    .table-input {
+        width: 100%;
+        padding: 6px 10px;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+        font-size: 13px;
+    }
+
+    .table-select {
+        width: 100%;
+        padding: 6px;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+        font-size: 13px;
+    }
+
+    .add-row-btn {
+        width: 100%;
+        font-size: 13px;
+        text-transform: uppercase;
+        margin-top: 10px;
+    }
+    /* Делаем правую колонку просторнее */
+    main.right-col {
+        padding: 40px 35px !important; /* Увеличиваем отступы сверху/снизу и по бокам внутри рамки */
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+        gap: 25px; /* Автоматический отступ между всеми крупными блоками внутри */
+    }
+
+    /* Прижимаем заголовок листа кверху, чтобы не было гигантской дыры */
+    .ml-header {
+        margin-bottom: 15px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #eee;
+    }
+
+    /* Сбрасываем лишние внешние отступы у самого блока старт, раз мы добавили gap */
+    .start-block {
+        margin-bottom: 10px;
+    }
+    /* Блок личных побед по оригиналу */
+.victory-block {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding-left: 10px;
+}
+
+.victory-title {
+    font-size: 14px;
+    font-weight: bold;
+    margin: 0 0 12px 0;
+}
+
+.victory-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.victory-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    font-size: 14px;
+    width: 100%;
+}
+
+.victory-check {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: #000; /* Черный чекбокс в наш стиль */
+}
+
+.victory-text {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+/* Маленькое поле для ввода количества мероприятий внутри текста */
+.inline-number-input {
+    border: none;
+    border-bottom: 1px solid #000;
+    text-align: center;
+    width: 40px;
+    font-size: 14px;
+    padding: 0;
+    background: transparent;
+}
+
+/* Длинные пустые линии для кастомных побед */
+.line-input {
+    border: none;
+    border-bottom: 1px solid #000;
+    font-size: 14px;
+    padding: 2px 0;
+    background: transparent;
+    flex-grow: 1; /* Растягивает линию на всю оставшуюся ширину */
+    max-width: 100%;
+}
+
+.line-input:focus, .inline-number-input:focus {
+    outline: none;
+    border-bottom-width: 2px; /* При фокусе линия становится чуть жирнее */
+}
+
+    .radio-cell {
+        display: flex;
+        flex-wrap: wrap; /* Если экран будет узким, кнопки аккуратно перенесутся */
+        gap: 10px;
+        align-items: center;
+    }
+    /* Двухколоночная сетка для направлений Движения Первых */
+    .movement-checkbox-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* Делим ровно на две колонки */
+        gap: 10px 20px; /* Отступы между строками и колонками */
+        margin-top: 15px;
+    }
+    .signature-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 14px;
+    }
+
+    .sig-label {
+        width: 110px; /* Фиксированная ширина меток, чтобы линии подписей начинались с одной вертикали */
+    }
+
+
+
+
+        </style>
+@code {
+    // ID выбранного в данный момент подростка (по умолчанию первый)
+    private int selectedStudentId = 1;
+
+    // Модель данных для подростка
+    public class StudentModel
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = "";
+        public int Progress { get; set; }
+    }
+
+    // Список наших подопечных бедось
+    private List<StudentModel> Students = new List<StudentModel>()
+    {
+        new StudentModel { Id = 1, Name = "Подросток 1", Progress = 70 },
+        new StudentModel { Id = 2, Name = "Подросток 2", Progress = 20 },
+        new StudentModel { Id = 3, Name = "Подросток 3", Progress = 90 }
+    };
+
+    // Метод переключения подростка при клике
+    private void SelectStudent(int id)
+    {
+        selectedStudentId = id;
+        // В будущем здесь мы будем также загружать МЛ именно для этого ребенка!
+    }
+
+    // Вспомогательный метод для получения имени в заголовок
+    private string GetSelectedStudentName()
+    {
+        var student = Students.FirstOrDefault(s => s.Id == selectedStudentId);
+        return student != null ? student.Name : "Не выбран";
+    }
+    // Описываем, из чего состоит строка мероприятия
+    public class ActivityItem
+    {
+        public string What { get; set; } = "";
+        public string How { get; set; } = "";
+        public string Date { get; set; } = "";
+        public int Points { get; set; } = 10;
+    }
+    // Логика для кастомной цели в блоке СТАРТ
+    private bool isCustomGoalChecked = false;
+    private string customGoalText = "";
+
+
+    // Создаем список для Уровня 1 и закидываем туда одну строчку для примера
+    private List<ActivityItem> Level1Activities = new List<ActivityItem>()
+    {
+        new ActivityItem { What = "Запись в кружок Чтения", How = "Посетить библиотеку им. Пушкина", Date = "15.01.2026", Points = 10 }
+    };
+
+    // Метод добавления новой пустой строки в таблицу Уровня 1
+    private void AddLevel1Row()
+    {
+        Level1Activities.Add(new ActivityItem { What = "", How = "", Date = "", Points = 10 });
+    }
+    // Независимые списки для таблиц 2 и 3 уровней
+    private List<ActivityItem> Level2Activities = new List<ActivityItem>()
+    {
+        new ActivityItem { What = "Поход в кино с мамой", How = "Купить 2 билета на выходные", Date = "", Points = 20 }
+    };
+
+    private List<ActivityItem> Level3Activities = new List<ActivityItem>()
+    {
+        new ActivityItem { What = "Помощь приюту животных", How = "Собрать старые вещи на подстилки", Date = "", Points = 40 }
+    };
+
+    // Метод добавления строки для Уровня 2
+    private void AddLevel2Row()
+    {
+        Level2Activities.Add(new ActivityItem { What = "", How = "", Date = "", Points = 10 });
+    }
+
+    // Метод добавления строки для Уровня 3
+    private void AddLevel3Row()
+    {
+        Level3Activities.Add(new ActivityItem { What = "", How = "", Date = "", Points = 10 });
+    }
+    // Логика 1: Физически запрещаем нажимать буквы (работает мгновенно)
+    private void BlockNonDigits(KeyboardEventArgs e)
+    {
+        // Разрешаем только цифры. Если это буква - Blazor её проигнорирует
+        if (!char.IsDigit(e.Key[0]) && e.Key != "Backspace" && e.Key != "Delete")
+        {
+            return;
+        }
+    }
+
+    // Логика 2: Автоматически подставляем точки, когда набрано 2 и 5 символов
+    private void InsertDotsOnFly(ChangeEventArgs e, ActivityItem act)
+    {
+        if (e.Value == null) return;
+
+        string val = e.Value.ToString() ?? "";
+
+        // Очищаем от старых точек, чтобы не дублировать
+        string digits = new string(val.Where(char.IsDigit).ToArray());
+        string res = "";
+
+        if (digits.Length > 0)
+            res += digits.Substring(0, Math.Min(2, digits.Length));
+
+        if (digits.Length > 2)
+            res += "." + digits.Substring(2, Math.Min(2, digits.Length - 2));
+
+        if (digits.Length > 4)
+            res += "." + digits.Substring(4, Math.Min(4, digits.Length - 4));
+
+        act.Date = res;
+    }
+    // Текстовые поля "Как это у меня"
+    private string howPlan = "";
+    private string howSchool = "";
+    private string howConflict = "";
+    private string howLaw = "";
+    private string howHobby = "";
+    private string howParents = "";
+
+    // Результаты радиокнопок (Да / Частично / Нет)
+    private string resPlan = "yes";
+    private string resSchool = "partially";
+    private string resConflict = "yes";
+    private string resLaw = "yes";
+    private string resHobby = "yes";
+    private string resParents = "yes";
+
+
+
+}

@@ -1,4 +1,6 @@
-﻿@page "/"
+﻿@rendermode InteractiveServer
+@page "/"
+@inject NavigationManager Navigation
 
 <PageTitle>MentoRate — Главная</PageTitle>
 
@@ -22,123 +24,63 @@
             <a href="#">Магазин наград</a>
             <a href="#">Инструкции</a>
         </div>
-        <button class="btn-lk">Личный кабинет</button>
+        @* Маленькая и неприметная кнопка входа сбоку, как просили в правках *@
+        <button class="btn-lk-top" @onclick="GoToLogin">Войти</button>
     </nav>
 
-    @* --- ОСНОВНОЙ КОНТЕНТ (ДВЕ КОЛОНКИ) --- *@
-    <main class="main-grid">
+    @* --- ОСНОВНОЙ КОНТЕНТ (ИДЕТ СПЛОШНЫМИ СЛАЙДАМИ СВЕРХУ ВНИЗ) --- *@
+    <main class="landing-main">
 
-        @* ЛЕВАЯ КОЛОНКА:  Масштаб *@
-        <section class="content-left">
-
-            @* БЛОК 1: Масштаб платформы (теперь сверху и в рамке) *@
-            <div class="stats-banner border-box">
-                <h3>МАСШТАБ ПЛАТФОРМЫ</h3>
-                <p class="stats-geo"> Мы находимся в 89 регионах РФ</p>
-
-                <div class="stats-grid">
-                    <div class="stats-item">
-                        <span class="stats-number">1 240</span>
-                        <span class="stats-label">всего активных наставников</span>
-                    </div>
-                    <div class="stats-item">
-                        <span class="stats-number">3 450</span>
-                        <span class="stats-label">всего участников программы</span>
-                    </div>
-                </div>
-            </div>
-
-            @* БЛОК 2: Прокачай навыки  *@
-            <div class="hero-block border-box">
-                <h2>ПРОКАЧАЙ СВОИ НАВЫКИ И НАЙДИ ЕДИНОМЫШЛЕННИКОВ</h2>
-                <p class="subtitle">Интерактивная платформа для совместной работы наставников и участников.</p>
-                <p class="description">Развивайтесь вместе, фиксируйте достижения и открывайте новые возможности.</p>
-            </div>
-
+        @* СЛАЙД 1: Главный лозунг (Презентация) *@
+        <section class="hero-block border-box">
+            <h2>ПРОКАЧАЙ СВОИ НАВЫКИ И НАЙДИ ЕДИНОМЫШЛЕННИКОВ</h2>
+            <p class="subtitle">Интерактивная платформа для совместной работы наставников и участников.</p>
+            <p class="description">Развивайтесь вместе, фиксируйте достижения и открывайте новые возможности.</p>
         </section>
 
-        @* ПРАВАЯ КОЛОНКА: Вход и Инфо *@
-        <aside class="content-right">
-            <div class="info-card auth-card">
-                @if (isLoginMode)
-                {
-                    <h4>01. ВХОД В СИСТЕМУ</h4>
-                    <div class="auth-form">
-                        <div class="form-group">
-                            <label>Логин или Email</label>
-                            <input type="text" @bind="loginUsername" placeholder="Введите логин..." />
-                        </div>
-                        <div class="form-group">
-                            <label>Пароль</label>
-                            <input type="password" @bind="loginPassword" placeholder="Введите пароль..." />
-                        </div>
-                        <button class="btn-auth" @onclick="HandleLogin">Войти</button>
-                        <p class="auth-toggle">Нет аккаунта? <span @onclick="ToggleMode">Регистрация</span></p>
-                    </div>
-                }
-                else
-                {
-                    <h4>01. РЕГИСТРАЦИЯ</h4>
-                    <div class="auth-form">
-                        <div class="form-group">
-                            <label>Имя пользователя</label>
-                            <input type="text" @bind="regUsername" placeholder="Придумайте логин..." />
-                        </div>
-                        <div class="form-group">
-                            <label>Пароль</label>
-                            <input type="password" @bind="regPassword" placeholder="Придумайте пароль..." />
-                        </div>
-                        <div class="form-group">
-                            <label>Кто вы?</label>
-                            <select @bind="regRole">
-                                <option value="student">Учётник (Подросток)</option>
-                                <option value="mentor">Наставник</option>
-                            </select>
-                        </div>
-                        <button class="btn-auth btn-reg" @onclick="HandleRegister">Создать профиль</button>
-                        <p class="auth-toggle">Уже есть аккаунт? <span @onclick="ToggleMode">Войти</span></p>
-                    </div>
-                }
+        @* СЛАЙД 2: Масштаб платформы в рамке *@
+        <section class="stats-banner border-box">
+            <h3>МАСШТАБ ПЛАТФОРМЫ</h3>
+            <p class="stats-geo"> Мы находимся в 89 регионах РФ</p>
 
-                @if (!string.IsNullOrEmpty(authMessage))
-                {
-                    <div class="auth-message">@authMessage</div>
-                }
+            <div class="stats-grid">
+                <div class="stats-item">
+                    <span class="stats-number">1 240</span>
+                    <span class="stats-label">всего активных наставников</span>
+                </div>
+                <div class="stats-item">
+                    <span class="stats-number">3 450</span>
+                    <span class="stats-label">всего участников программы</span>
+                </div>
             </div>
+        </section>
 
+        @* СЛАЙД 3: Ценности и возможности *@
+        <section class="features-section">
+            <h3 class="section-title">ЦЕННОСТЬ И ВОЗМОЖНОСТИ ПЛАТФОРМЫ</h3>
 
-            <div class="info-card">
-                <h4>02. ЦИФРОВОЙ ТРЕК</h4>
-                <p>Проходите уровни развития в удобном диджитал-формате. Пошагово фиксируйте свои успехи вместе с куратором на интерактивной карте.</p>
+            <div class="features-grid">
+                <div class="feature-card border-box">
+                    <h5>Наставникам и Подросткам</h5>
+                    <ul>
+                        <li>Наставник заполняет маршрутный лист вместе со своим учеником.</li>
+                        <li>Подросток видит контакты куратора и личную траекторию.</li>
+                        <li>Система защищена от накруток.</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card border-box">
+                    <h5>Баллы и Магазин наград</h5>
+                    <ul>
+                        <li>Получайте очки опыта за инициативу, активность и помощь другим.</li>
+                        <li>Баланс кошелька отображается в профиле участника.</li>
+                        <li>Обменивайте баллы на мерч (стаканы, худи, спецкурсы).</li>
+                    </ul>
+                </div>
             </div>
-        </aside>
+        </section>
 
     </main>
-
-    @* --- БЛОК: ЦЕННОСТЬ И ВОЗМОЖНОСТИ --- *@
-    <section class="features-section">
-        <h3>ЦЕННОСТЬ И ВОЗМОЖНОСТИ ПЛАТФОРМЫ</h3>
-
-        <div class="features-grid">
-            <div class="feature-card">
-                <h5>Наставникам и Подросткам</h5>
-                <ul>
-                    <li>Наставник заполняет маршрутный лист вместе со своим учеником.</li>
-                    <li>Подросток видит контакты куратора и личную траекторию.</li>
-                    <li>Система защищена от накруток.</li>
-                </ul>
-            </div>
-
-            <div class="feature-card">
-                <h5>Баллы и Магазин наград</h5>
-                <ul>
-                    <li>Получайте очки опыта за инициативу, активность и помощь другим.</li>
-                    <li>Баланс кошелька отображается в профиле участника.</li>
-                    <li>Обменивайте баллы на мерч (стаканы, худи, спецкурсы).</li>
-                </ul>
-            </div>
-        </div>
-    </section>
 
     @* --- ПОДВАЛ (FOOTER) --- *@
     <footer class="site-footer">
@@ -147,14 +89,22 @@
 
 </div>
 
+
 @* --- СТИЛИ СТРАНИЦЫ --- *@
 <style>
     .landing-container {
         font-family: Arial, sans-serif;
-        max-width: 1200px;
+        max-width: 1000px; /* Сделали чуть уже для более аккуратного вида презентации */
         margin: 0 auto;
         padding: 20px;
-        color: #333;
+        color: #000;
+    }
+
+    .border-box {
+        border: 1px solid #ccc;
+        padding: 40px 30px; /* Увеличили внутренние отступы как на слайдах */
+        background: #fff;
+        margin-bottom: 30px; /* Отступы между слайдами вниз */
     }
 
     /* Шапка */
@@ -164,15 +114,18 @@
         align-items: center;
         margin-bottom: 20px;
     }
+
     .logo {
-        font-size: 28px;
+        font-size: 24px;
         font-weight: bold;
     }
+
     .search-box input {
         padding: 8px 12px;
         border: 1px solid #ccc;
         width: 200px;
     }
+
     .search-box button {
         padding: 8px 16px;
         background: #e0e0e0;
@@ -186,269 +139,135 @@
         justify-content: space-between;
         align-items: center;
         border: 1px solid #ccc;
-        padding: 10px 20px;
-        margin-bottom: 30px;
+        padding: 12px 20px;
+        margin-bottom: 40px;
+        background: #fff;
     }
+
     .nav-links a {
-        margin-right: 15px;
+        margin-right: 20px;
         text-decoration: none;
         color: #000;
         font-weight: bold;
+        font-size: 14px;
     }
-    .btn-lk {
+
+        .nav-links a.active {
+            text-decoration: underline;
+        }
+
+    /* Та самая маленькая неприметная кнопка сбоку */
+    .btn-lk-top {
         background: #000;
         color: #fff;
-        padding: 8px 20px;
+        padding: 6px 18px;
         border: none;
         cursor: pointer;
         font-weight: bold;
+        font-size: 13px;
+        text-transform: uppercase;
     }
 
-    /* Сетка главного контента */
-    .main-grid {
-        display: grid;
-        grid-template-columns: 2fr 1fr;
-        gap: 30px;
-        margin-bottom: 40px;
-    }
-
-    /* Левая колонка */
-    /* Общий класс для рамок блоков */
-    .border-box {
-        border: 1px solid #ccc;
-        padding: 30px 20px;
-        margin-bottom: 20px; /* Отступ между верхним и нижним блоком */
-        background-color: #fff;
-    }
-
-    /* Блок статистики регионов */
-    .stats-banner {
-        text-align: left;
-    }
-
-        .stats-banner h3 {
-            font-size: 20px;
-            margin-top: 0;
-            margin-bottom: 10px;
-            letter-spacing: 1px;
-        }
-
-    .stats-geo {
-        font-size: 16px;
-        font-weight: bold;
-        color: #333;
-        margin-bottom: 25px;
-    }
-
-    .stats-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 20px;
-    }
-
-    .stats-item {
+    /* Одноколоночный контент */
+    .landing-main {
         display: flex;
         flex-direction: column;
-        border-left: 3px solid #000; /* Черная полоса слева */
-        padding-left: 15px;
     }
 
-    .stats-number {
-        font-size: 32px;
-        font-weight: 900;
-        line-height: 1;
-        color: #000;
-        margin-bottom: 5px;
-    }
-
-    .stats-label {
-        font-size: 14px;
-        color: #666;
-        text-transform: lowercase;
-    }
-
-    /* Блок прокачки навыков */
+    /* Слайд 1: Прокачай навыки */
     .hero-block {
         text-align: center;
     }
 
         .hero-block h2 {
-            font-size: 22px;
+            font-size: 26px;
+            margin-top: 0;
             margin-bottom: 20px;
+            letter-spacing: 0.5px;
         }
 
     .subtitle {
         font-weight: bold;
+        font-size: 16px;
         margin-bottom: 15px;
     }
 
-    .subtitle {
-        font-weight: bold;
-        margin-bottom: 15px;
-    }
-    .track-banner {
-        border: 1px solid #ccc;
-        padding: 30px;
-        text-align: center;
-        background-color: #f9f9f9;
-        /* Блок статистики регионов */
-        .stats-banner {
-            border: 1px solid #ccc;
-            padding: 30px;
-            background-color: #f9f9f9;
-            text-align: left; /* Выравнивание по левому краю для строгого стиля */
-        }
-
-        /* Общий класс для рамок блоков */
-        .border-box {
-            border: 1px solid #ccc;
-            padding: 30px 20px;
-            margin-bottom: 20px; /* Отступ между верхним и нижним блоком */
-            background-color: #fff;
-        }
-        /* Блок статистики регионов */
-        .stats-banner {
-            text-align: left;
-        }
-
-            .stats-banner h3 {
-                font-size: 20px;
-                margin-top: 0;
-                margin-bottom: 10px;
-                letter-spacing: 1px;
-            }
-
-        .stats-geo {
-            font-size: 16px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 25px;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        .stats-item {
-            display: flex;
-            flex-direction: column;
-            border-left: 3px solid #000; /* Черная полоса слева */
-            padding-left: 15px;
-        }
-
-        .stats-number {
-            font-size: 32px;
-            font-weight: 900;
-            line-height: 1;
-            color: #000;
-            margin-bottom: 5px;
-        }
-
-        .stats-label {
-            font-size: 14px;
-            color: #666;
-            text-transform: lowercase;
-        }
-        /* Блок прокачки навыков */
-        .hero-block {
-            text-align: center;
-        }
-
-            .hero-block h2 {
-                font-size: 22px;
-                margin-bottom: 20px;
-            }
-
-        .subtitle {
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-
-
-        .stats-geo {
-            font-size: 16px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 25px;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr; /* Делим блок на две равные колонки */
-            gap: 20px;
-        }
-
-        .stats-item {
-            display: flex;
-            flex-direction: column;
-            border-left: 3px solid #000; /* Строгая черная черта слева от цифры */
-            padding-left: 15px;
-        }
-
-        .stats-number {
-            font-size: 32px;
-            font-weight: 900;
-            line-height: 1;
-            color: #000;
-            margin-bottom: 5px;
-        }
-
-        .stats-label {
-            font-size: 14px;
-            color: #666;
-            text-transform: lowercase; /* Принудительно в нижний регистр как в запросе */
-        }
+    .description {
+        color: #555;
+        font-size: 14px;
     }
 
-    /* Правая колонка */
-    .info-card {
-        border: 1px solid #ccc;
-        padding: 20px;
-        margin-bottom: 20px;
-    }
-    .info-card h4 {
+    /* Слайд 2: Статистика */
+    .stats-banner h3 {
+        font-size: 20px;
         margin-top: 0;
-        color: #666;
-    }
-    .lk-link {
-        display: inline-block;
-        margin-top: 15px;
-        color: #333;
-        font-weight: bold;
-        text-decoration: none;
+        margin-bottom: 15px;
     }
 
-    /* Нижний блок возможностей */
+    .stats-geo {
+        font-size: 15px;
+        font-weight: bold;
+        margin-bottom: 30px;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+    }
+
+    .stats-item {
+        border-left: 3px solid #000;
+        padding-left: 20px;
+    }
+
+    .stats-number {
+        font-size: 36px;
+        font-weight: 900;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .stats-label {
+        font-size: 14px;
+        color: #555;
+    }
+
+    /* Слайд 3: Возможности */
     .features-section {
-        margin-bottom: 40px;
+        margin-bottom: 50px;
     }
-    .features-section h3 {
-        border-bottom: 2px solid #333;
+
+    .section-title {
+        font-size: 18px;
+        font-weight: bold;
+        border-bottom: 2px solid #000;
         padding-bottom: 10px;
-        margin-bottom: 20px;
+        margin-bottom: 25px;
     }
+
     .features-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 20px;
     }
-    .feature-card {
-        border: 1px solid #ccc;
-        padding: 20px;
-        background: #fff;
-    }
+
     .feature-card h5 {
         font-size: 16px;
         margin-top: 0;
         margin-bottom: 15px;
+        font-weight: bold;
     }
+
     .feature-card ul {
         padding-left: 20px;
+        margin: 0;
     }
+
     .feature-card li {
         margin-bottom: 10px;
+        font-size: 14px;
+        color: #333;
     }
 
     /* Подвал */
@@ -456,116 +275,18 @@
         text-align: center;
         border-top: 1px solid #ccc;
         padding-top: 20px;
-        font-size: 14px;
+        font-size: 13px;
         color: #666;
     }
-
-    .auth-card {
-        background: #fdfdfd;
-    }
-
-    .auth-form {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        margin-top: 15px;
-    }
-
-    .form-group {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-    }
-
-        .form-group label {
-            font-size: 13px;
-            font-weight: bold;
-            color: #555;
-        }
-
-        .form-group input, .form-group select {
-            padding: 8px;
-            border: 1px solid #ccc;
-            font-size: 14px;
-        }
-
-    .btn-auth {
-        background: #000;
-        color: #fff;
-        padding: 10px;
-        border: none;
-        cursor: pointer;
-        font-weight: bold;
-        margin-top: 5px;
-        text-transform: uppercase;
-    }
-
-    .btn-reg {
-        background: #444;
-    }
-
-    .auth-toggle {
-        font-size: 13px;
-        text-align: center;
-        margin: 5px 0 0 0;
-    }
-
-        .auth-toggle span {
-            color: #0056b3;
-            text-decoration: underline;
-            cursor: pointer;
-        }
-
-    .auth-message {
-        margin-top: 15px;
-        padding: 8px;
-        background: #eee;
-        border-left: 4px solid #333;
-        font-size: 13px;
-        text-align: center;
-    }
 </style>
+
 @code {
-    // Переключение режимов: true = Вход, false = Регистрация
-    private bool isLoginMode = true;
-    private string authMessage = "";
-
-    // Поля для Входа
-    private string loginUsername = "";
-    private string loginPassword = "";
-
-    // Поля для Регистрации
-    private string regUsername = "";
-    private string regPassword = "";
-    private string regRole = "student";
-
-    private void ToggleMode()
+    private void GoToLogin()
     {
-        isLoginMode = !isLoginMode;
-        authMessage = ""; // Очищаем сообщения при переключении
-    }
-
-    private void HandleLogin()
-    {
-        if (string.IsNullOrWhiteSpace(loginUsername) || string.IsNullOrWhiteSpace(loginPassword))
-        {
-            authMessage = " Заполните все поля!";
-            return;
-        }
-
-        // В будущем тут будет реальная проверка по базе данных
-        authMessage = $" Успешный вход для {loginUsername}!";
-    }
-
-    private void HandleRegister()
-    {
-        if (string.IsNullOrWhiteSpace(regUsername) || string.IsNullOrWhiteSpace(regPassword))
-        {
-            authMessage = "Заполните поля регистрации!";
-            return;
-        }
-
-        authMessage = $" Профиль {regUsername} ({regRole}) создан!";
+        // Пока временно перекидываем в кабинет наставника
+        Navigation.NavigateTo("/Dashboard-mentor");
     }
 }
 
+    
+            

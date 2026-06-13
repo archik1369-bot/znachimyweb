@@ -1,0 +1,197 @@
+﻿@page "/dashboard-student"
+
+<PageTitle>MentoRate — Кабинет Наставляемого</PageTitle>
+
+<div class="lk-container">
+
+    @* --- ПАНЕЛЬ КУРАТОРА --- *@
+    <div class="mentor-panel border-box">
+        🤝 <b>Мой куратор:</b> Иванов Павел Сергеевич (<b>Контакты:</b> p.ivanov@@mentor.ru)
+    </div>
+
+    @* --- ДВУХКОЛОНОЧНЫЙ МАКЕТ --- *@
+    <div class="lk-grid">
+
+        @* ЛЕВАЯ КОЛОНКА: КАРТА ДОСТИЖЕНИЙ *@
+        <section class="lk-column">
+            <h3 class="column-title">🗺️ Моя карта достижений (Чтение)</h3>
+
+            @* Уровень 1 (Пройдено) *@
+            <div class="level-card level-passed">
+                <h5>Пройдено: Уровень 1 (Я для себя)</h5>
+                <p>Очки опыта успешно зачислены</p>
+            </div>
+
+            @* Уровень 2 (В процессе) *@
+            <div class="level-card level-process">
+                <h5>В процессе: Уровень 2 (Для семьи)</h5>
+                <p>Ожидание фиксации куратором</p>
+            </div>
+
+            @* Уровень 3 (Блокировка) *@
+            <div class="level-card level-locked">
+                <h5>Блокировка: Уровень 3 (Для мира)</h5>
+                <p>Последовательный переход</p>
+            </div>
+        </section>
+
+        @* ПРАВАЯ КОЛОНКА: БАЛАНС И МАГАЗИН *@
+        <aside class="lk-column">
+
+            @* Блок баланса *@
+            <div class="balance-card border-box">
+                🍓 <b>Баланс очков опыта</b>
+                <div class="balance-count">Счет: @StudentPoints баллов</div>
+            </div>
+
+            <h4 class="shop-title">🛍️ Магазин наград:</h4>
+
+            @* Товар 1 (Доступно) *@
+            <div class="product-card border-box @(StudentPoints >= 300 ? "prod-available" : "prod-locked")">
+                <p><b>Товар:</b> Брендированный стакан</p>
+                <p><b>Стоимость:</b> 300 очков опыта</p>
+                <span class="status-text">[ Отображение: Доступно ]</span>
+            </div>
+
+            @* Товар 2 (Недостаточно) *@
+            <div class="product-card border-box @(StudentPoints >= 800 ? "prod-available" : "prod-locked")">
+                <p><b>Товар:</b> Фирменное оверсайз худи</p>
+                <p><b>Стоимость:</b> 800 очков опыта</p>
+                <span class="status-text">[ Отображение: Недостаточно ]</span>
+            </div>
+
+        </aside>
+    </div>
+
+    <footer class="lk-footer">
+        <a href="/" class="btn-exit">[ Выйти из кабинета ]</a>
+    </footer>
+</div>
+
+@* --- СТИЛИ ДЛЯ СОБЛЮДЕНИЯ ЧЕРНО-БЕЛОГО СТИЛЯ --- *@
+<style>
+    .lk-container {
+        font-family: Arial, sans-serif;
+        max-width: 1100px;
+        margin: 30px auto;
+        padding: 20px;
+        color: #000;
+    }
+
+    /* Общая рамка, как на главной */
+    .border-box {
+        border: 1px solid #ccc;
+        padding: 15px 20px;
+        background-color: #fff;
+        margin-bottom: 15px;
+    }
+
+    /* Шапка куратора */
+    .mentor-panel {
+        font-size: 15px;
+    }
+
+    /* Сетка на две колонки */
+    .lk-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        margin-top: 20px;
+    }
+
+    .column-title {
+        font-size: 18px;
+        margin-bottom: 20px;
+        font-weight: bold;
+    }
+
+    /* Карточки уровней (Левая колонка) */
+    .level-card {
+        border: 1px solid #ccc;
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    .level-card h5 {
+        margin: 0 0 5px 0;
+        font-size: 15px;
+        font-weight: bold;
+    }
+    .level-card p {
+        margin: 0;
+        font-size: 13px;
+    }
+
+    /* Специфические статусы для уровней (аккуратные черно-белые маркеры) */
+    .level-passed {
+        border-left: 5px solid #000; /* Пройден — жирная черная черта */
+        background-color: #f9f9f9;
+    }
+    .level-process {
+        border-left: 5px solid #888; /* В процессе — серая черта */
+        background-color: #fff;
+    }
+    .level-locked {
+        border-left: 5px solid #eee; /* Заблокирован — бледная черта */
+        background-color: #fff;
+        color: #999;
+    }
+
+    /* Правая колонка: Баланс и магазин */
+    .balance-card {
+        text-align: center;
+        background-color: #f9f9f9;
+    }
+    .balance-count {
+        font-size: 20px;
+        font-weight: bold;
+        margin-top: 5px;
+    }
+    .shop-title {
+        font-size: 16px;
+        margin: 25px 0 15px 0;
+        font-weight: bold;
+    }
+    .product-card {
+        font-size: 14px;
+    }
+    .product-card p {
+        margin: 0 0 5px 0;
+    }
+    .status-text {
+        font-size: 12px;
+        font-weight: bold;
+        display: block;
+        margin-top: 10px;
+    }
+
+    /* Стилизация доступности товаров */
+    .prod-available .status-text {
+        color: #000;
+    }
+    .prod-locked {
+        opacity: 0.5; /* Недоступный товар слегка затеняем */
+    }
+    .prod-locked .status-text {
+        color: #666;
+    }
+
+    /* Кнопка выхода */
+    .lk-footer {
+        margin-top: 40px;
+        text-align: center;
+    }
+    .btn-exit {
+        color: #000;
+        text-decoration: none;
+        font-weight: bold;
+    }
+    .btn-exit:hover {
+        text-decoration: underline;
+    }
+</style>
+
+@code {
+    // Количество баллов у ученика (как на твоем макете)
+    private int StudentPoints = 600;
+}
+
