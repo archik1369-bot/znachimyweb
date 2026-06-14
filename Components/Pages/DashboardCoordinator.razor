@@ -1,0 +1,142 @@
+@rendermode InteractiveServer
+@page "/dashboard-coordinator"
+
+<PageTitle>MentoRate – Панель Координатора</PageTitle>
+
+<div style="max-width: 1200px; margin: 0 auto; padding: 25px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #333; font-size: 14px; background: #fff;">
+    
+    <div style="border: 1px solid #e2e8f0; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; background: #fff; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+        <div style="font-size: 14px;">
+            <span style="color: #64748b;">ID: 001 | </span>
+            <strong>Пользователь:</strong> Смирнова О.В. (Региональный координатор)
+        </div>
+        <button style="border: none; background: transparent; color: #ef4444; font-weight: bold; cursor: pointer; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;">
+            Выйти
+        </button>
+    </div>
+
+    <div style="display: flex; gap: 25px; align-items: flex-start;">
+        
+        <div style="width: 340px; height: 530px; flex-shrink: 0; background: #f8fafc; border: 1px solid #e2e8f0; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); box-sizing: border-box; display: flex; flex-direction: column;">
+            
+            <h3 style="font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 4px 0; color: #0f172a; font-weight: 700;">
+                Реестр наставников
+            </h3>
+            <p style="margin: 0 0 15px 0; color: #64748b; font-size: 12px;">Общий список закреплённых менторов</p>
+            
+            <input type="text" placeholder="Быстрый поиск по ФИО..." 
+                   style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; font-size: 13px; margin-bottom: 15px; box-sizing: border-box; outline: none; background: #fff; flex-shrink: 0;">
+
+            <div style="flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding-right: 5px; margin-bottom: 15px; scrollbar-width: thin; scrollbar-color: #cbd5e1 transparent;">
+
+                
+                <div style="border: 2px solid #0f172a; padding: 12px; background: #fff; font-size: 13px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); flex-shrink: 0;">
+                    <strong style="color: #0f172a;">Петров А.В. [ВЫБРАН]</strong>
+                    <div style="margin-top: 4px; color: #475569;">ID: 542</div>
+                    <div style="margin-top: 6px; color: #0f172a; font-size: 11px; font-weight: bold; background: #f1f5f9; padding: 2px 6px; display: inline-block;">Доступно 2 слота (1 из 3)</div>
+                </div>
+
+                <div style="border: 1px solid #e2e8f0; padding: 12px; background: #fff; font-size: 13px; box-shadow: 0 1px 2px rgba(0,0,0,0.02); flex-shrink: 0;">
+                    <strong style="color: #0f172a;">Сидоров К.М.</strong>
+                    <div style="margin-top: 4px; color: #475569;">ID: 543</div>
+                    <div style="margin-top: 6px; color: #16a34a; font-size: 11px; font-weight: bold;">● Свободен (0 из 3)</div>
+                </div>
+                
+                <div style="border: 1px solid #e2e8f0; padding: 12px; background: #f1f5f9; opacity: 0.6; font-size: 13px; flex-shrink: 0;">
+                    <strong style="color: #475569;">Иванов П.С.</strong>
+                    <div style="margin-top: 4px; color: #475569;">ID: 541</div>
+                    <div style="margin-top: 6px; color: #64748b; font-size: 11px;">Лимит полный (3 из 3)</div>
+                </div>
+
+                <div style="border: 1px solid #e2e8f0; padding: 12px; background: #fff; font-size: 13px; box-shadow: 0 1px 2px rgba(0,0,0,0.02); flex-shrink: 0;">
+                    <strong style="color: #0f172a;">Алексеева М.Д.</strong>
+                    <div style="margin-top: 4px; color: #475569;">ID: 544</div>
+                    <div style="margin-top: 6px; color: #16a34a; font-size: 11px; font-weight: bold;">● Свободен (0 из 3)</div>
+                </div>
+
+                <div style="border: 1px solid #e2e8f0; padding: 12px; background: #fff; font-size: 13px; box-shadow: 0 1px 2px rgba(0,0,0,0.02); flex-shrink: 0;">
+                    <strong style="color: #0f172a;">Кузнецов Д.С.</strong>
+                    <div style="margin-top: 4px; color: #475569;">ID: 545</div>
+                    <div style="margin-top: 6px; color: #16a34a; font-size: 11px; font-weight: bold;">● Свободен (0 из 3)</div>
+                </div>
+
+                <div style="border: 1px solid #e2e8f0; padding: 12px; background: #fff; font-size: 13px; box-shadow: 0 1px 2px rgba(0,0,0,0.02); flex-shrink: 0;">
+                    <strong style="color: #0f172a;">Васильев Н.А.</strong>
+                    <div style="margin-top: 4px; color: #475569;">ID: 546</div>
+                    <div style="margin-top: 6px; color: #475569; font-size: 11px;">Частично занят (2 из 3)</div>
+                </div>
+
+            </div>
+
+            <div style="border-top: 1px solid #cbd5e1; padding-top: 15px; font-size: 13px; flex-shrink: 0;">
+                <div style="margin-bottom: 6px; display: flex; justify-content: space-between;">
+                    <span style="color: #64748b;">Всего менторов:</span> <strong>24</strong>
+                </div>
+                <div style="margin-bottom: 6px; display: flex; justify-content: space-between;">
+                    <span style="color: #64748b;">Детей без пар:</span> <strong style="color: #dc2626; background: #fee2e2; padding: 1px 6px;">14</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="color: #64748b;">Свободных слотов:</span> <strong>42</strong>
+                </div>
+            </div>
+        </div>
+
+        <div style="flex-grow: 1; border: 1px solid #e2e8f0; background: #fff; padding: 30px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03); box-sizing: border-box;">
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid #e2e8f0; padding-bottom: 15px;">
+                <h2 style="font-size: 22px; font-weight: bold; margin: 0; color: #0f172a;">Распределение и прикрепление</h2>
+                <button style="border: 1px solid #0f172a; background: #fff; color: #0f172a; padding: 8px 16px; font-size: 13px; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px;">
+                    Выгрузить отчет
+                </button>
+            </div>
+
+            <div style="margin-bottom: 25px; font-size: 14px; background: #f8fafc; padding: 10px 15px; border-left: 3px solid #0f172a;">
+                Текущий целевой наставник: <strong style="font-size: 15px; color: #0f172a;">Петров А.В. (ID: 542)</strong>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; font-size: 11px; text-transform: uppercase; font-weight: bold; margin-bottom: 6px; color: #475569; letter-spacing: 0.5px;">
+                    Шаг 1: Наставляемый подросток (ID или ФИО ребенка)
+                </label>
+                <input type="text" placeholder="Например: Подросток 4 или ID 885" 
+                       style="width: 100%; max-width: 450px; padding: 10px 12px; border: 1px solid #cbd5e1; font-size: 14px; outline: none; box-sizing: border-box;">
+            </div>
+
+            <div style="margin-bottom: 25px;">
+                <label style="display: block; font-size: 11px; text-transform: uppercase; font-weight: bold; margin-bottom: 6px; color: #475569; letter-spacing: 0.5px;">
+                    Шаг 2: Основание распределения (Номер приказа)
+                </label>
+                <input type="text" placeholder="Приказ № 21-Б от 15.06.2026" 
+                       style="width: 100%; max-width: 450px; padding: 10px 12px; border: 1px solid #cbd5e1; font-size: 14px; outline: none; box-sizing: border-box;">
+            </div>
+
+            <button style="border: none; background: #0f172a; color: #fff; padding: 12px 28px; font-size: 13px; font-weight: bold; cursor: pointer; margin-bottom: 35px; text-transform: uppercase; letter-spacing: 0.5px;">
+                Прикрепить к наставнику
+            </button>
+
+            <div style="border-top: 1px solid #e2e8f0; padding-top: 25px;">
+                <h4 style="margin: 0 0 15px 0; font-size: 13px; text-transform: uppercase; color: #475569; letter-spacing: 0.5px;">
+                    Текущие подопечные наставника (1 из 3)
+                </h4>
+                
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <div style="border: 1px solid #e2e8f0; padding: 12px 15px; font-size: 13px; display: flex; justify-content: space-between; background: #fff; align-items: center; box-shadow: 0 1px 2px rgba(0,0,0,0.02);">
+                        <span><strong>1. Подросток 1</strong> (ID: 884)</span>
+                        <span style="color: #475569; background: #f1f5f9; padding: 3px 8px; font-size: 11px; font-weight: bold;">Приказ №14-А</span>
+                    </div>
+                    <div style="border: 1px dashed #cbd5e1; padding: 12px 15px; font-size: 13px; color: #94a3b8; background: #f8fafc;">
+                        2. [ Свободный слот под распределение ]
+                    </div>
+                    <div style="border: 1px dashed #cbd5e1; padding: 12px 15px; font-size: 13px; color: #94a3b8; background: #f8fafc;">
+                        3. [ Свободный слот под распределение ]
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 50px; color: #94a3b8; font-size: 11px; letter-spacing: 0.5px;">
+        [значимый взрослый] • Панель управления распределением пар • 2026
+    </div>
+</div>
