@@ -1,455 +1,366 @@
 @rendermode InteractiveServer
 @page "/dashboard-coordinator"
+@inject IJSRuntime JSRuntime
 
 <PageTitle>MentoRate – Панель Координатора</PageTitle>
 
 <div class="coordinator-container">
-    
+
     <!-- Шапка кабинета -->
     <div class="cabinet-header">
         <div class="user-info">
             <span class="user-id">ID: 001 | </span>
-            <strong>Пользователь:</strong> Смирнова О.В. (Региональный координатор)
+            <strong>Пользователь:</strong> @currentCoordinator.FIO (Региональный координатор — Район:
+            @currentCoordinator.District)
         </div>
         <button class="btn-logout">Выйти</button>
     </div>
 
     <!-- Основной контент: две колонки -->
     <div class="columns-wrapper">
-        
+
         <!-- ЛЕВАЯ КОЛОНКА: Реестр менторов -->
         <div class="left-column">
             <h3 class="column-title">Реестр наставников</h3>
             <p class="column-subtitle">Общий список закреплённых менторов</p>
-            
-            <input type="text" placeholder="Быстрый поиск по ФИО..." class="search-input">
+
+            <input type="text" @bind="searchQuery" @bind:event="oninput" placeholder="Быстрый поиск по ФИО..."
+                   class="search-input">
 
             <!-- Контейнер списка со скроллом -->
             <div class="mentors-scroll-list">
-                
-                <!-- Ментор 1 (ВЫБРАН) -->
-                <div class="mentor-card mentor-selected">
-                    <strong>Петров А.В. [ВЫБРАН]</strong>
-                    <div class="mentor-id">ID: 542</div>
-                    <div class="slots-badge">Доступно 2 слота (1 из 3)</div>
+                @foreach (var mentor in FilteredMentors)
+                {
+                    bool isSelected = selectedMentor != null && selectedMentor.Id == mentor.Id;
+                    string cardClass = isSelected ? "mentor-card mentor-selected" : "mentor-card";
+                    if (mentor.CurrentSlots >= mentor.MaxSlots) cardClass += " mentor-full";
+
+                    <div class="@cardClass" @onclick="() => SelectMentor(mentor)" style="cursor: pointer;">
+                        <strong>@mentor.FIO @(isSelected ? "[ВЫБРАН]" : "")</strong>
+                        <div class="mentor-id">ID: @mentor.Id</div>
+
+                        @if (mentor.CurrentSlots >= mentor.MaxSlots)
+                        {
+                            <div class="status-full">Лимит полный (@mentor.CurrentSlots из @mentor.MaxSlots)</div>
+                        }
+                        else if (mentor.CurrentSlots == 0)
+                        {
+                            <div class="status-free">● Свободен (@mentor.CurrentSlots из @mentor.MaxSlots)</div>
+                        }
+                        else
+                        {
+                            <div class="slots-badge">Доступно @(mentor.MaxSlots - mentor.CurrentSlots) слота
+                                (@mentor.CurrentSlots из @mentor.MaxSlots)</div>
+                            }
+                        </div>
+                    }
                 </div>
 
-                <!-- Ментор 2 -->
-                <div class="mentor-card">
-                    <strong>Сидоров К.М.</strong>
-                    <div class="mentor-id">ID: 543</div>
-                    <div class="status-free">● Свободен (0 из 3)</div>
-                </div>
-                
-                <!-- Ментор 3 (ПОЛНЫЙ) -->
-                <div class="mentor-card mentor-full">
-                    <strong>Иванов П.С.</strong>
-                    <div class="mentor-id">ID: 541</div>
-                    <div class="status-full">Лимит полный (3 из 3)</div>
-                </div>
-
-                <!-- Ментор 4 -->
-                <div class="mentor-card">
-                    <strong>Алексеева М.Д.</strong>
-                    <div class="mentor-id">ID: 544</div>
-                    <div class="status-free">● Свободен (0 из 3)</div>
-                </div>
-
-                <!-- Ментор 5 -->
-                <div class="mentor-card">
-                    <strong>Кузнецов Д.С.</strong>
-                    <div class="mentor-id">ID: 545</div>
-                    <div class="status-free">● Свободен (0 из 3)</div>
-                </div>
-
-                <!-- Ментор 6 -->
-                <div class="mentor-card">
-                    <strong>Васильев Н.А.</strong>
-                    <div class="mentor-id">ID: 546</div>
-                    <div class="status-busy">Частично занят (2 из 3)</div>
-                </div>
-
-            </div>
-
-            <!-- Сводка под списком -->
-            <div class="summary-block">
-                <div class="summary-row">
-                    <span>Всего менторов:</span> <strong>24</strong>
-                </div>
-                <div class="summary-row">
-                    <span>Детей без пар:</span> <strong class="badge-danger">14</strong>
-                </div>
-                <div class="summary-row">
-                    <span>Свободных слотов:</span> <strong>42</strong>
-                </div>
-            </div>
-        </div>
-
-        <!-- ПРАВАЯ КОЛОНКА: Управление распределением -->
-        <div class="right-column">
-            
-            <div class="right-column-header">
-                <h2 class="main-title">Распределение и прикрепление</h2>
-                <button class="btn-secondary">Выгрузить отчет</button>
-            </div>
-
-            <div class="target-mentor-banner">
-                Текущий целевой наставник: <strong>Петров А.В. (ID: 542)</strong>
-            </div>
-
-            <!-- Форма ввода данных -->
-            <div class="form-group">
-                <label class="form-label">Шаг 1: Наставляемый подросток (ID или ФИО ребенка)</label>
-                <input type="text" placeholder="Например: Подросток 4 или ID 885" class="form-input">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">Шаг 2: Основание распределения (Номер приказа)</label>
-                <input type="text" placeholder="Приказ № 21-Б от 15.06.2026" class="form-input">
-            </div>
-
-            <button class="btn-primary">Прикрепить к наставнику</button>
-
-            <!-- Список текущих пар наставника -->
-            <div class="current-pairs-block">
-                <h4 class="pairs-title">Текущие подопечные наставника (1 из 3)</h4>
-                
-                <div class="pairs-list">
-                    <div class="pair-row row-active">
-                        <span><strong>1. Подросток 1</strong> (ID: 884)</span>
-                        <span class="pair-document">Приказ №14-А</span>
+                <!-- Сводка под списком (Вычисляется динамически) -->
+                <div class="summary-block">
+                    <div class="summary-row">
+                        <span>Всего менторов в районе:</span> <strong>@FilteredMentors.Count</strong>
                     </div>
-                    <div class="pair-row row-empty">
-                        2. [ Свободный слот под распределение ]
+                    <div class="summary-row">
+                        <span>Детей без пар в районе:</span> <strong
+                        class="badge-danger">@FreeTeenagersInDistrict.Count</strong>
                     </div>
-                    <div class="pair-row row-empty">
-                        3. [ Свободный слот под распределение ]
+                    <div class="summary-row">
+                        <span>Свободных слотов:</span> <strong>@FilteredMentors.Sum(m => m.MaxSlots -
+                                                                                                                                                                                                                                                                                                                        m.CurrentSlots)</strong>
                     </div>
                 </div>
             </div>
 
-        </div>
-    </div>
+            <!-- ПРАВАЯ КОЛОНКА: Управление распределением -->
+            <div class="right-column">
 
-    <!-- Подвал страницы -->
-    <div class="cabinet-footer">
-        [значимый взрослый] • Панель управления распределением пар • 2026
-    </div>
-</div>
+                <div class="right-column-header">
+                    <h2 class="main-title">Распределение и прикрепление</h2>
+                    <button class="btn-secondary" @onclick="ExportToExcel">Выгрузить отчет</button>
+                </div>
 
-<style>
-    .coordinator-container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 25px;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        color: #333;
-        font-size: 14px;
-        background: #fff;
+                @if (selectedMentor != null)
+                {
+                    <div class="target-mentor-banner">
+                        Текущий целевой наставник: <strong>@selectedMentor.FullFIO (ID: @selectedMentor.Id)</strong>
+                    </div>
+
+
+                    <!-- КРАТКАЯ ИНФО О МЕНТОРЕ -->
+                    <div class="info-card-block">
+                        <div
+                            style="font-weight: 700; margin-bottom: 10px; font-size: 14px; color: #0f172a; border-bottom: 1px solid #f1f5f9; padding-bottom: 5px;">
+                            📇 Контактные данные наставника
+                        </div>
+                        <div style="color: #475569; font-size: 13px; display: flex; align-items: center; gap: 8px;">
+                            <span>👤</span> Опыт в проекте: <strong style="color: #0f172a;">@selectedMentor.Experience</strong>
+                        </div>
+                        <div
+                            style="color: #475569; font-size: 13px; margin-top: 6px; display: flex; align-items: center; gap: 8px;">
+                            <span>📞</span> Телефон: <strong style="color: #0f172a;">@selectedMentor.Phone</strong>
+                        </div>
+                        <div
+                            style="color: #475569; font-size: 13px; margin-top: 6px; display: flex; align-items: center; gap: 8px;">
+                            <span>✉️</span> Эл. почта: <strong
+                            style="color: #0f172a; font-family: monospace;">@selectedMentor.Email</strong>
+                        </div>
+                    </div>
+
+
+                    <!-- БЛОК МОНИТОРИНГА -->
+                    <div class="monitor-card-block">
+                        <div style="font-weight: 700; margin-bottom: 8px; font-size: 14px; color: #16a34a;">📊 Мониторинг трека
+                            пары</div>
+                            <div style="color: #475569; margin-left: 4px;">• Текущий этап: <strong
+                                style="color: #0f172a;">@selectedMentor.RouteLevel</strong></div>
+                                <div style="color: #475569; margin-left: 4px; margin-top: 4px;">• Набрано опыта: <span
+                                    style="color: #16a34a; font-weight: bold;">@selectedMentor.ExperiencePoints XP</span></div>
+                                    <div style="color: #475569; margin-left: 4px; margin-top: 4px;">• Общий процент успеха:
+                                        <span
+                                        style="font-weight: bold; color: @(selectedMentor.SuccessRate >= 70 ? "#16a34a" : "#dc2626")">@selectedMentor.SuccessRate%</span>
+                                    </div>
+                                </div>
+
+
+                                <!-- Форма ввода данных -->
+                                @if (selectedMentor.CurrentSlots < selectedMentor.MaxSlots)
+                                {
+                                    <div class="form-group">
+                                        <label class="form-label" style="margin-bottom: 8px;">Шаг 1: Наставляемый подросток (Дети вашего района
+                                            без пар)</label>
+                                            <select class="form-input" @bind="selectedTeenagerId">
+                                                <option value="0" hidden disabled> -- Выберите ребенка из списка --</option>
+                                                @foreach (var child in FreeTeenagersInDistrict)
+                                                {
+                                                    <option value="@child.Id">@child.FIO (ID: @child.Id)</option>
+                                                }
+                                            </select>
+                                        </div>
+
+                                        <button class="btn-primary" @onclick="AttachTeenager" style="margin-top: 5px;">Прикрепить к
+                                            наставнику</button>
+                                        }
+                else
+                                        {
+                                            <div class="pair-row row-empty"
+                                                 style="border: 1px solid #fee2e2; background: #fef2f2; color: #dc2626; margin-bottom: 35px; font-weight: bold;">
+                                                ⚠️ У данного наставника заполнены все доступные слоты! Прикрепление невозможно.
+                                            </div>
+                                        }
+
+                                        <!-- Список текущих пар наставника -->
+                                        <div class="current-pairs-block">
+                                            <h4 class="pairs-title">Текущие подопечные наставника (@selectedMentor.CurrentSlots из
+                                                @selectedMentor.MaxSlots)</h4>
+
+                                                <div class="pairs-list">
+                                                    @{
+                                                        int slotIndex = 1;
+                                                        foreach (var p in selectedMentor.AssignedTeenagers)
+                                                        {
+                                                            <div class="pair-row row-active">
+                                                                <span><strong>@slotIndex. @p.FIO</strong> (ID: @p.Id)</span>
+                                                                <div style="display: flex; align-items: center; gap: 10px;">
+                                                                    <span class="pair-document" style="background: #ecfdf5; color: #15803d;">Активен</span>
+                                                                    <button @onclick="() => DetachTeenager(p)" title="Открепить подростка"
+                                                                            style="background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; border-radius: 4px; padding: 2px 6px; font-size: 11px; cursor: pointer; font-weight: bold;">❌</button>
+                                                                </div>
+                                                            </div>
+                                                            slotIndex++;
+
+                                                        }
+                                                        for (int i = selectedMentor.CurrentSlots; i < selectedMentor.MaxSlots; i++)
+                                                        {
+                                                            <div class="pair-row row-empty">
+                                                                @slotIndex. [ Свободный слот под распределение ]
+                                                            </div>
+                                                            slotIndex++;
+                                                        }
+                                                    }
+                                                </div>
+                                            </div>
+                                        }
+            else
+                                        {
+                                            <div style="text-align: center; color: #94a3b8; margin-top: 120px; font-size: 15px;">
+                                                👈 Выберите наставника из реестра слева, чтобы управлять распределением и просмотреть сводку.
+                                            </div>
+                                        }
+
+                                    </div>
+                                </div>
+
+                                <!-- Подвал страницы -->
+                                <div class="cabinet-footer">
+                                    [значимый взрослый] • Панель управления распределением пар • 2026
+                                </div>
+                            </div>
+
+
+@code {
+    private class Coordinator
+    {
+        public int Id { get; set; }
+        public string FIO { get; set; } = "";
+        public string District { get; set; } = "";
     }
 
-    .cabinet-header {
-        border: 1px solid #e2e8f0;
-        padding: 16px 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background: #fff;
-        margin-bottom: 25px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    private Coordinator currentCoordinator = new Coordinator
+    {
+        Id = 1,
+        FIO = "Смирнова О.В.",
+        District = "Октябрьский"
+    };
+
+    private class Teenager
+    {
+        public int Id { get; set; }
+        public string FIO { get; set; } = "";
+        public string District { get; set; } = "";
     }
 
-    .user-info {
-        font-size: 14px;
+    private class Mentor
+    {
+        public int Id { get; set; }
+        public string FIO { get; set; } = "";
+        public string FullFIO { get; set; } = ""; // Полное ФИО
+        public string District { get; set; } = "";
+        public int CurrentSlots => AssignedTeenagers.Count;
+        public int MaxSlots { get; set; } = 3;
+        public string Experience { get; set; } = "";
+        public string Phone { get; set; } = "";
+        public string Email { get; set; } = ""; // Электронная почта
+
+        public string RouteLevel { get; set; } = "Уровень 1: Я для себя";
+        public int ExperiencePoints { get; set; } = 0;
+        public int SuccessRate { get; set; } = 0;
+
+        public List<Teenager> AssignedTeenagers { get; set; } = new();
     }
 
-    .user-id {
-        color: #64748b;
+    private List<Mentor> allMentors = new();
+    private List<Teenager> allTeenagers = new();
+
+    private Mentor? selectedMentor;
+    private int selectedTeenagerId = 0;
+    private string searchQuery = "";
+
+    protected override void OnInitialized()
+    {
+        allTeenagers = new List<Teenager>
+        {
+            new Teenager { Id = 884, FIO = "Подросток 1", District = "Октябрьский" },
+            new Teenager { Id = 885, FIO = "Макаров Данил", District = "Октябрьский" },
+            new Teenager { Id = 886, FIO = "Соколова Анна", District = "Октябрьский" },
+            new Teenager { Id = 887, FIO = "Тихонов Иван", District = "Октябрьский" },
+            new Teenager { Id = 901, FIO = "Кущ Никита", District = "Ленинский" },
+            new Teenager { Id = 902, FIO = "Petrova Kira", District = "Кировский" }
+        };
+
+        allMentors = new List<Mentor>
+        {
+           new Mentor {
+                Id = 542, FIO = "Петров А.В.", FullFIO = "Петров Алексей Владимирович", District = "Октябрьский", MaxSlots = 3,
+                Experience = "1.5 года (1 выпускник)", Phone = "+7 (999) 123-45-67", Email = "petrov_av@mentorate.ru",
+                RouteLevel = "Уровень 2: Для семьи и друзей", ExperiencePoints = 140, SuccessRate = 75,
+                AssignedTeenagers = new List<Teenager> { allTeenagers[0] }
+            },
+            new Mentor {
+                Id = 543, FIO = "Сидоров К.М.", FullFIO = "Сидоров Константин Михайлович", District = "Октябрьский", MaxSlots = 3,
+                Experience = "Новичок (прошел обучение)", Phone = "+7 (999) 765-43-21", Email = "sidorov_km@mentorate.ru",
+                RouteLevel = "Уровень 1: Я для себя", ExperiencePoints = 20, SuccessRate = 12
+            },
+            new Mentor {
+                Id = 541, FIO = "Иванов П.С.", FullFIO = "Иванов Петр Сергеевич", District = "Октябрьский", MaxSlots = 3,
+                Experience = "3 года (4 выпускника)", Phone = "+7 (900) 111-22-33", Email = "ivanov_ps@mentorate.ru",
+                RouteLevel = "Уровень 3: Я для мира", ExperiencePoints = 320, SuccessRate = 95,
+                // Забиваем ему все 3 слота реальными детьми из базы
+                AssignedTeenagers = new List<Teenager> {
+                    new Teenager { Id = 777, FIO = "Старый Подопечный", District = "Октябрьский" },
+                    allTeenagers[2],
+                    allTeenagers[3]
+                }
+            },
+            new Mentor {
+                Id = 544, FIO = "Алексеева М.Д.", FullFIO = "Алексеева Марина Дмитриевна", District = "Октябрьский", MaxSlots = 3,
+                Experience = "6 месяцев", Phone = "+7 (950) 444-55-66", Email = "alekseeva_md@mentorate.ru",
+                RouteLevel = "Уровень 1: Я для себя", ExperiencePoints = 50, SuccessRate = 38
+            },
+            new Mentor {
+                Id = 545, FIO = "Кузнецов Д.С.", FullFIO = "Кузнецов Дмитрий Сергеевич", District = "Октябрьский", MaxSlots = 3,
+                Experience = "Новичок", Phone = "+7 (919) 333-22-11", Email = "kuznetsov_ds@mentorate.ru",
+                RouteLevel = "Уровень 1: Я для себя", ExperiencePoints = 0, SuccessRate = 0
+            },
+            new Mentor {
+                Id = 546, FIO = "Васильев Н.А.", FullFIO = "Васильев Николай Алексеевич", District = "Октябрьский", MaxSlots = 3,
+                Experience = "1 год", Phone = "+7 (904) 555-66-77", Email = "vasiliev_na@mentorate.ru",
+                RouteLevel = "Уровень 2: Для семьи и друзей", ExperiencePoints = 110, SuccessRate = 60
+            },
+            new Mentor {
+                Id = 999, FIO = "Харламов И.Ю.", FullFIO = "Харламов Игорь Юрьевич", District = "Ленинский", MaxSlots = 3,
+                Experience = "2 года", Phone = "+7 (912) 000-11-22", Email = "kharlamov_iy@mentorate.ru",
+                RouteLevel = "Уровень 1: Я для себя", ExperiencePoints = 30, SuccessRate = 15
+            }
+        };
+
+        selectedMentor = FilteredMentors.FirstOrDefault(m => m.Id == 542);
     }
 
-    .btn-logout {
-        border: none;
-        background: transparent;
-        color: #ef4444;
-        font-weight: bold;
-        cursor: pointer;
-        font-size: 14px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
+    private List<Mentor> FilteredMentors => allMentors
+        .Where(m => m.District == currentCoordinator.District)
+        .Where(m => string.IsNullOrWhiteSpace(searchQuery) || m.FIO.Contains(searchQuery, StringComparison.OrdinalIgnoreCase))
+        .ToList();
+
+    private List<Teenager> FreeTeenagersInDistrict
+    {
+        get
+        {
+            var busyTeenagerIds = allMentors.SelectMany(m => m.AssignedTeenagers).Select(t => t.Id).ToList();
+            return allTeenagers
+                .Where(t => t.District == currentCoordinator.District && !busyTeenagerIds.Contains(t.Id))
+                .ToList();
+        }
     }
 
-    .columns-wrapper {
-        display: flex;
-        gap: 25px;
-        align-items: flex-start;
+    private void SelectMentor(Mentor mentor)
+    {
+        selectedMentor = mentor;
+        selectedTeenagerId = 0;
     }
 
-    .left-column {
-        width: 340px;
-        height: 530px;
-        flex-shrink: 0;
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
-        padding: 20px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.02);
-        box-sizing: border-box;
-        display: flex;
-        flex-direction: column;
+    private async Task AttachTeenager()
+    {
+        if (selectedMentor == null || selectedTeenagerId == 0)
+        {
+            await JSRuntime.InvokeVoidAsync("alert", "Пожалуйста, выберите подростка из списка!");
+            return;
+        }
+
+        var teenager = allTeenagers.FirstOrDefault(t => t.Id == selectedTeenagerId);
+        if (teenager != null)
+        {
+            selectedMentor.AssignedTeenagers.Add(teenager);
+            selectedTeenagerId = 0;
+            await JSRuntime.InvokeVoidAsync("alert", $"Успешно! {teenager.FIO} закреплен.");
+        }
+    }
+    private async Task DetachTeenager(Teenager teenager)
+    {
+        if (selectedMentor != null)
+        {
+            selectedMentor.AssignedTeenagers.Remove(teenager);
+            await JSRuntime.InvokeVoidAsync("alert", $"Подросток {teenager.FIO} успешно откреплен от наставника.");
+        }
     }
 
-    .column-title {
-        font-size: 13px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin: 0 0 4px 0;
-        color: #0f172a;
-        font-weight: 700;
+    private async Task ExportToExcel()
+    {
+        string reportPreview = $"Формирование Excel-отчета по району '{currentCoordinator.District}':\n\n";
+        foreach (var m in FilteredMentors)
+        {
+            reportPreview += $"• {m.FIO} | Прогресс: {m.RouteLevel} ({m.ExperiencePoints} XP, Успех: {m.SuccessRate}%)\n";
+        }
+        await JSRuntime.InvokeVoidAsync("alert", reportPreview);
     }
-
-    .column-subtitle {
-        margin: 0 0 15px 0;
-        color: #64748b;
-        font-size: 12px;
-    }
-
-    .search-input {
-        width: 100%;
-        padding: 10px 12px;
-        border: 1px solid #cbd5e1;
-        font-size: 13px;
-        margin-bottom: 15px;
-        box-sizing: border-box;
-        outline: none;
-        background: #fff;
-        flex-shrink: 0;
-    }
-
-    .mentors-scroll-list {
-        flex-grow: 1;
-        overflow-y: auto;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        padding-right: 5px;
-        margin-bottom: 15px;
-        scrollbar-width: thin;
-        scrollbar-color: #cbd5e1 transparent;
-    }
-
-    .mentor-card {
-        border: 1px solid #e2e8f0;
-        padding: 12px;
-        background: #fff;
-        font-size: 13px;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.02);
-        flex-shrink: 0;
-    }
-
-    .mentor-id {
-        margin-top: 4px;
-        color: #475569;
-    }
-
-    .mentor-selected {
-        border: 2px solid #0f172a;
-        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-    }
-
-    .slots-badge {
-        margin-top: 6px;
-        color: #0f172a;
-        font-size: 11px;
-        font-weight: bold;
-        background: #f1f5f9;
-        padding: 2px 6px;
-        display: inline-block;
-    }
-
-    .mentor-full {
-        background: #f1f5f9;
-        opacity: 0.6;
-    }
-
-    .status-free {
-        margin-top: 6px;
-        color: #16a34a;
-        font-size: 11px;
-        font-weight: bold;
-    }
-
-    .status-full {
-        margin-top: 6px;
-        color: #64748b;
-        font-size: 11px;
-    }
-
-    .status-busy {
-        margin-top: 6px;
-        color: #475569;
-        font-size: 11px;
-    }
-
-    .summary-block {
-        border-top: 1px solid #cbd5e1;
-        padding-top: 15px;
-        font-size: 13px;
-        flex-shrink: 0;
-    }
-
-    .summary-row {
-        margin-bottom: 6px;
-        display: flex;
-        justify-content: space-between;
-    }
-
-    .summary-row span {
-        color: #64748b;
-    }
-
-    .badge-danger {
-        color: #dc2626;
-        background: #fee2e2;
-        padding: 1px 6px;
-    }
-
-    .right-column {
-        flex-grow: 1;
-        border: 1px solid #e2e8f0;
-        background: #fff;
-        padding: 30px;
-        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
-        box-sizing: border-box;
-    }
-
-    .right-column-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 25px;
-        border-bottom: 1px solid #e2e8f0;
-        padding-bottom: 15px;
-    }
-
-    .main-title {
-        font-size: 22px;
-        font-weight: bold;
-        margin: 0;
-        color: #0f172a;
-    }
-
-    .target-mentor-banner {
-        margin-bottom: 25px;
-        font-size: 14px;
-        background: #f8fafc;
-        padding: 10px 15px;
-        border-left: 3px solid #0f172a;
-    }
-
-    .form-group {
-        margin-bottom: 20px;
-    }
-
-    .form-label {
-        display: block;
-        font-size: 11px;
-        text-transform: uppercase;
 }
-
-.form-input {
-    width: 100%;
-    max-width: 450px;
-    padding: 10px 12px;
-    border: 1px solid #cbd5e1;
-    font-size: 14px;
-    outline: none;
-    box-sizing: border-box;
-}
-
-.bg-alt {
-    background: #fff;
-}
-
-/* Кнопки распределения */
-.btn-primary {
-    border: none;
-    background: #0f172a;
-    color: #fff;
-    padding: 12px 28px;
-    font-size: 13px;
-    font-weight: bold;
-    cursor: pointer;
-    margin-bottom: 35px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.btn-secondary {
-    border: 1px solid #0f172a;
-    background: #fff;
-    color: #0f172a;
-    padding: 8px 16px;
-    font-size: 13px;
-    font-weight: bold;
-    cursor: pointer;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-/* Блок текущих пар справа */
-.current-pairs-block {
-    border-top: 1px solid #e2e8f0;
-    padding-top: 25px;
-}
-
-.pairs-title {
-    margin: 0 0 15px 0;
-    font-size: 13px;
-    text-transform: uppercase;
-    color: #475569;
-    letter-spacing: 0.5px;
-}
-
-.pairs-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.pair-row {
-    padding: 12px 15px;
-    font-size: 13px;
-    box-sizing: border-box;
-}
-
-.row-active {
-    border: 1px solid #e2e8f0;
-    display: flex;
-    justify-content: space-between;
-    background: #fff;
-    align-items: center;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.02);
-}
-
-.pair-document {
-    color: #475569;
-    background: #f1f5f9;
-    padding: 3px 8px;
-    font-size: 11px;
-    font-weight: bold;
-}
-
-.row-empty {
-    border: 1px dashed #cbd5e1;
-    color: #94a3b8;
-    background: #f8fafc;
-}
-
-/* Подвал */
-.cabinet-footer {
-    text-align: center;
-    margin-top: 50px;
-    color: #94a3b8;
-    font-size: 11px;
-    letter-spacing: 0.5px;
-}
-</style>
