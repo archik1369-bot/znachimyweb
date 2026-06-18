@@ -1,394 +1,684 @@
- .coordinator-container {
-     max-width: 1280px;
-     margin: 40px auto;
-     padding: 0 20px;
-     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-     color: #0f172a;
-     background: #fff;
- }
+.coordinator-container {
+    max-width: 1360px;
+    margin: 40px auto;
+    padding: 0 24px;
+    font-family: 'Inter', -apple-system, sans-serif;
+    color: #0f172a;
+    background: radial-gradient(circle at 90% 10%, rgba(212, 255, 0, 0.15), transparent 600px),
+        radial-gradient(circle at 10% 90%, rgba(117, 36, 143, 0.08), transparent 700px),
+        #fcfbfe;
+    position: relative;
+    overflow: hidden;
+}
 
- /* Шапка кабинета */
- .cabinet-header {
-     border: 1px solid #e2e8f0;
-     border-radius: 12px;
-     padding: 16px 24px;
-     display: flex;
-     justify-content: space-between;
-     align-items: center;
-     background: #fff;
-     margin-bottom: 30px;
-     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
- }
+/* ОГРОМНЫЙ КОНТУРНЫЙ ТЕКСТ НА ЗАДНЕМ ПЛАНЕ ДЛЯ ВКУСОВЩИНЫ */
+.coordinator-container::before {
+    content: 'MENTORATE';
+    position: absolute;
+    right: -100px;
+    bottom: 50px;
+    font-size: 180px;
+    font-weight: 900;
+    color: transparent;
+    -webkit-text-stroke: 2px rgba(117, 36, 143, 0.03);
+    /* Тонкий контур текста */
+    pointer-events: none;
+    letter-spacing: 6px;
+    z-index: 0;
+}
 
- .user-info {
-     font-size: 14px;
-     color: #334155;
- }
+/* ШАПКА КАБИНЕТА: Ультра-мягкая парящая карточка в стиле Росмолодёжи */
+.cabinet-header {
+    border-radius: 24px;
+    padding: 22px 36px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #ffffff;
+    margin-bottom: 40px;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 20px 50px -12px rgba(117, 36, 143, 0.06),
+        0 4px 12px rgba(0, 0, 0, 0.01);
+}
 
- .user-id {
-     color: #94a3b8;
-     font-weight: 600;
- }
+.user-info {
+    font-size: 19px;
+    font-weight: 700;
+    color: #1e293b;
+}
 
- .btn-logout {
-     border: none;
-     background: transparent;
-     color: #ef4444;
-     font-weight: 700;
-     cursor: pointer;
-     font-size: 13px;
-     text-transform: uppercase;
-     letter-spacing: 0.5px;
-     transition: color 0.2s;
- }
+.user-id {
+    color: #ffffff;
+    background: hsl(285, 100%, 60%);
+    /* Фирменный фиолетовый */
+    padding: 6px 14px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 850;
+    margin-right: 8px;
+    box-shadow: 0 4px 12px rgba(117, 36, 143, 0.2);
+}
 
- .btn-logout:hover {
-     color: #dc2626;
- }
+.btn-logout {
+    border: 5px solid #fee2e2;
+    background: #ffffff;
+    color: #ef4444;
+    font-weight: 850;
+    cursor: pointer;
+    padding: 10px 20px;
+    border-radius: 14px;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.2s ease;
+}
 
- /* Сетка колонок */
- .columns-wrapper {
-     display: flex;
-     gap: 30px;
-     align-items: flex-start;
- }
+.btn-logout:hover {
+    background: #ef4444;
+    color: #ffffff;
+    border-color: #ef4444;
+    box-shadow: 0 8px 20px rgba(239, 68, 68, 0.25);
+}
 
- /* ЛЕВАЯ КОЛОНКА */
- .left-column {
-     width: 360px;
-     height: 650px;
-     /* Увеличили высоту, чтобы всё влезло */
-     flex-shrink: 0;
-     background: #f8fafc;
-     border: 1px solid #e2e8f0;
-     border-radius: 12px;
-     padding: 24px;
-     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
-     box-sizing: border-box;
-     display: flex;
-     flex-direction: column;
- }
+/* СЕТКА КОЛОНОК */
+.columns-wrapper {
+    display: flex;
+    gap: 50px;
+    align-items: flex-start;
+    position: relative;
+    z-index: 1;
+}
 
- .column-title {
-     font-size: 14px;
-     text-transform: uppercase;
-     letter-spacing: 0.7px;
-     margin: 0 0 6px 0;
-     color: #0f172a;
-     font-weight: 800;
- }
+/* ЛЕВАЯ КОЛОНКА: Парящий реестр */
+.left-column {
+    width: 500px;
+    height: 780px;
+    flex-shrink: 0;
+    background: #ffffff;
+    border-radius: 32px;
+    /* Максимальное закругление со скриншота "Ладоги" */
+    padding: 32px;
+    box-shadow: 0 30px 60px -15px rgba(117, 36, 143, 0.05),
+        0 4px 20px rgba(0, 0, 0, 0.01);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
 
- .column-subtitle {
-     margin: 0 0 20px 0;
-     color: #64748b;
-     font-size: 12px;
- }
+.column-title {
+    font-size: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin: 0 0 6px 0;
+    color: #ce3cff;
+    font-weight: 900;
+    /* Ультра-жирный шрифт */
+}
 
- .search-input {
-     width: 100%;
-     padding: 12px 16px;
-     border: 1px solid #cbd5e1;
-     border-radius: 8px;
-     font-size: 13px;
-     margin-bottom: 20px;
-     box-sizing: border-box;
-     outline: none;
-     background: #fff;
-     flex-shrink: 0;
-     transition: border-color 0.2s;
- }
+.column-subtitle {
+    margin: 0 0 24px 0;
+    color: #2b1c36;
+    font-size: 17px;
+    font-weight: 600;
+}
 
- .search-input:focus {
-     border-color: #0f172a;
- }
+.search-input {
+    width: 100%;
+    padding: 16px 20px;
+    border: 2px solid #f9e9fe;
+    border-radius: 16px;
+    font-size: 16px;
+    margin-bottom: 24px;
+    box-sizing: border-box;
+    outline: none;
+    background: #fefbfb;
+    font-weight: 600;
+    transition: all 0.25s ease;
+}
 
- /* Скролл-список менторов */
- .mentors-scroll-list {
-     flex-grow: 1;
-     overflow-y: auto;
-     display: flex;
-     flex-direction: column;
-     gap: 12px;
-     padding-right: 5px;
-     margin-bottom: 20px;
-     scrollbar-width: thin;
-     scrollbar-color: #cbd5e1 transparent;
- }
+.search-input:focus {
+    background: #fffdfd;
+    border-color: #55176a;
+    box-shadow: 0 0 0 4px rgba(117, 36, 143, 0.12);
+}
 
- .mentor-card {
-     border: 1px solid #e2e8f0;
-     border-radius: 8px;
-     padding: 14px;
-     background: #fff;
-     font-size: 13px;
-     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.01);
-     flex-shrink: 0;
-     transition: all 0.2s;
- }
+/* СКРОЛЛ-СПИСОК КАРТОЧЕК МЕНТОРОВ */
+.mentors-scroll-list {
+    flex-grow: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    padding-right: 6px;
+    margin-bottom: 24px;
+}
 
- .mentor-card:hover {
-     border-color: #94a3b8;
- }
+/* КАРТОЧКА МЕНТОРА: Плотный, объемный стиль */
+/* КАРТОЧКА МЕНТОРА: Живой, аккуратный и структурированный вид по умолчанию */
+.mentor-card {
+    border: 5px solid #edf2f7;
+    border-radius: 20px;
+    /* Фирменное софт-закругление */
+    padding: 18px;
+    background: #ffffff;
+    font-size: 19px;
+    flex-shrink: 0;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.01);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
- .mentor-id {
-     margin-top: 4px;
-     color: #64748b;
-     font-size: 12px;
- }
+/* ЭФФЕКТ НАВЕДЕНИЯ: Мягкий, высветленный и нежный зелёный оттенок (Для красоты и комфорта глаз) */
+.mentor-card:hover {
+    background: #eaf8d1;
+    /* Тот самый нежный, высветленный пастельно-зелёный */
+    border-color: #eaf8d1;
+    transform: translateY(-3px);
+    box-shadow: 0 12px 24px rgba(164, 221, 61, 0.15);
+    /* Очень мягкое воздушное свечение */
+}
 
- .mentor-selected {
-     border: 2px solid #0f172a;
-     background: #fff;
-     box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
- }
+/* ВЫБРАННАЯ КАРТОЧКА: Точный фиолетовый из брендбука Росмолодёжи (#8c64d8) при клике */
+.mentor-card.mentor-selected {
+    border: 2px solid #ffffff;
+    box-shadow: 0 10px 25px -5px rgba(140, 100, 216, 0.15);
+}
 
- .slots-badge {
-     margin-top: 8px;
-     color: #334155;
-     font-size: 11px;
-     font-weight: 700;
-     background: #f1f5f9;
-     padding: 3px 8px;
-     border-radius: 4px;
-     display: inline-block;
- }
+/* ОВАЛ С ДОСТУПНЫМИ СЛОТАМИ ПО УМОЛЧАНИЮ */
+.slots-badge {
+    margin-top: 10px;
+    color: #475569;
+    font-size: 15px;
+    font-weight: 700;
+    background: #f1f5f9;
+    /* Чёткий овал для нижних карточек */
+    padding: 5px 12px;
+    border-radius: 12px;
+    display: inline-block;
+    transition: all 0.2s ease;
+}
 
- .mentor-full {
-     background: #f1f5f9;
-     opacity: 0.65;
- }
+/* КОНТРАСТ ПРИ НАВЕДЕНИИ: Перекрашиваем текст в глубокий фиолетовый из брендбука */
+.mentor-card:hover strong,
+.mentor-card:hover .mentor-id,
+.mentor-card:hover .status-free,
+.mentor-card:hover .status-full,
+.mentor-card:hover .slots-badge {
+    color: #000000 !important;
+    /* Контрастный чернично-фиолетовый цвет текста */
+}
 
- .status-free {
-     margin-top: 8px;
-     color: #16a34a;
-     font-size: 11px;
-     font-weight: 700;
- }
+/* Делаем сам овал внутри нежно-зелёной карточки чисто-белым при наведении */
+.mentor-card:hover .slots-badge {
+    background: #ffffff !important;
+}
 
- .status-full {
-     margin-top: 8px;
-     color: #64748b;
-     font-size: 11px;
- }
+/* ТЕКСТОВЫЕ СТАТУСЫ ДЛЯ ЧИТАЕМОСТИ КАРТОЧЕК */
+.mentor-id {
+    margin-top: 10px;
+    color: #718096;
+    font-size: 17px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
 
- /* Сводка под списком */
- .summary-block {
-     border-top: 1px solid #e2e8f0;
-     padding-top: 20px;
-     font-size: 13px;
-     flex-shrink: 0;
- }
+.status-free {
+    margin-top: 10px;
+    color: #8c64d8;
+    /* Точный фиолетовый Росмолодёжи для статуса свободы */
+    font-size: 12px;
+    font-weight: 800;
+    transition: all 0.2s ease;
+}
 
- .summary-row {
-     margin-bottom: 8px;
-     display: flex;
-     justify-content: space-between;
-     align-items: center;
- }
+.status-full {
+    margin-top: 10px;
+    color: #94a3b8;
+    font-size: 17px;
+    font-weight: 700;
+    transition: all 0.2s ease;
+}
 
- .summary-row:last-child {
-     margin-bottom: 0;
- }
+/* Абстрактный геометрический орнамент на бэкграунде карточки */
+.mentor-card::after {
+    content: '';
+    position: absolute;
+    right: -15px;
+    bottom: -15px;
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, transparent 40%, rgba(140, 100, 216, 0.04) 40%);
+    clip-path: polygon(40% 0%, 100% 0%, 60% 100%, 0% 100%);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
 
- .summary-row span {
-     color: #64748b;
- }
+.mentor-card:hover::after {
+    opacity: 1;
+}
 
- .badge-danger {
-     color: #dc2626;
-     background: #fee2e2;
-     padding: 2px 8px;
-     border-radius: 4px;
-     font-weight: 700;
- }
 
- /* ПРАВАЯ КОЛОНКА */
- .right-column {
-     flex-grow: 1;
-     min-height: 650px;
-     border: 1px solid #e2e8f0;
-     border-radius: 12px;
-     background: #fff;
-     padding: 40px;
-     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
-     box-sizing: border-box;
- }
+.mentor-id {
+    margin-top: 6px;
+    color: #4f5f77;
+    font-size: 17px;
+    font-weight: 700;
+}
 
- .right-column-header {
-     display: flex;
-     justify-content: space-between;
-     align-items: center;
-     margin-bottom: 30px;
-     border-bottom: 1px solid #e2e8f0;
-     padding-bottom: 20px;
- }
+/* ВЫБРАННЫЙ МЕНТОР: Мощный неоново-фиолетовый фокус */
+.mentor-card.mentor-selected {
+    border: 3px solid #75248f;
+    background: #ffffff;
+    box-shadow: 0 15px 35px -5px rgba(117, 36, 143, 0.18);
+}
 
- .main-title {
-     font-size: 24px;
-     font-weight: 800;
-     margin: 0;
-     color: #0f172a;
- }
+.slots-badge {
+    margin-top: 12px;
+    color: #475569;
+    font-size: 15px;
+    font-weight: 800;
+    background: #f1f5f9;
+    padding: 5px 12px;
+    border-radius: 10px;
+    display: inline-block;
+}
 
- .target-mentor-banner {
-     margin-bottom: 25px;
-     font-size: 15px;
-     background: #f8fafc;
-     padding: 14px 20px;
-     border-radius: 8px;
-     border-left: 4px solid #0f172a;
- }
+.mentor-full {
+    background: #f8fafc;
+    opacity: 1.75;
+}
 
- /* Стили для новых блоков инфы */
- .info-card-block {
-     border: 1px solid #e2e8f0;
-     border-radius: 8px;
-     padding: 16px;
-     margin-bottom: 16px;
-     background: #fff;
-     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.01);
- }
+/* Фирменный неоново-салатовый БашМолодёжь для свободных статусов */
+.status-free {
+    margin-top: 12px;
+    color: #205b07;
+    font-size: 15px;
+    font-weight: 1200;
+}
 
- .monitor-card-block {
-     border: 1px solid #e2e8f0;
-     border-radius: 8px;
-     padding: 16px;
-     margin-bottom: 30px;
-     background: #fff;
-     border-left: 4px solid #16a34a;
-     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.01);
- }
+.status-full {
+    margin-top: 17px;
+    color: #94a3b8;
+    font-size: 17px;
+    font-weight: 700;
+}
 
- /* Формы */
- .form-group {
-     margin-bottom: 24px;
- }
+/* СВОДКА ПОД СПИСКОМ: Контрастный блок */
+.summary-block {
+    border-top: 3px dashed #f1f5f9;
+    padding-top: 24px;
+    font-size: 18px;
+    flex-shrink: 0;
+}
 
- .form-label {
-     display: block;
-     font-size: 11px;
-     text-transform: uppercase;
-     color: #64748b;
-     font-weight: 700;
-     letter-spacing: 0.5px;
-     margin-bottom: 10px;
- }
+.summary-row {
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
- .form-input {
-     width: 100%;
-     max-width: 500px;
-     padding: 12px 16px;
-     border: 1px solid #cbd5e1;
-     border-radius: 8px;
-     font-size: 14px;
-     outline: none;
-     box-sizing: border-box;
-     background: #fff;
-     transition: border-color 0.2s;
- }
+.summary-row span {
+    color: #64748b;
+    font-weight: 600;
+}
 
- .form-input:focus {
-     border-color: #0f172a;
- }
+.summary-row strong {
+    color: #0f172a;
+    font-weight: 850;
+    font-size: 15px;
+}
 
- /* Кнопки */
- .btn-primary {
-     border: none;
-     background: #0f172a;
-     color: #fff;
-     padding: 14px 32px;
-     font-size: 13px;
-     font-weight: 700;
-     cursor: pointer;
-     border-radius: 8px;
-     margin-bottom: 40px;
-     text-transform: uppercase;
-     letter-spacing: 0.5px;
-     transition: background 0.2s;
- }
+.badge-danger {
+    color: #ef4444;
+    background: #fee2e2;
+    padding: 4px 12px;
+    border-radius: 10px;
+    font-weight: 900;
+}
 
- .btn-primary:hover {
-     background: #1e293b;
- }
+/* ПРАВАЯ КОЛОНКА: Парящий блок управления */
+.right-column {
+    flex-grow: 1;
+    min-height: 780px;
+    border-radius: 20px;
+    background: #ffffff;
+    padding: 45px;
+    box-shadow: 0 30px 60px -15px rgba(117, 36, 143, 0.05),
+        0 4px 20px rgba(0, 0, 0, 0.01);
+    box-sizing: border-box;
+}
 
- .btn-secondary {
-     border: 1px solid #e2e8f0;
-     background: #fff;
-     color: #0f172a;
-     padding: 10px 20px;
-     font-size: 13px;
-     font-weight: 600;
-     cursor: pointer;
-     border-radius: 8px;
-     text-transform: uppercase;
-     letter-spacing: 0.5px;
-     transition: all 0.2s;
- }
+.right-column-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #f1f5f9;
+    padding-bottom: 20px;
+}
 
- .btn-secondary:hover {
-     background: #f8fafc;
-     border-color: #cbd5e1;
- }
+.main-title {
+    font-size: 28px;
+    font-weight: 900;
+    /* Максимальный жирный акцент */
+    color: #0f172a;
+    letter-spacing: -0.8px;
+}
 
- /* Блок текущих пар */
- .current-pairs-block {
-     border-top: 1px solid #e2e8f0;
-     padding-top: 30px;
- }
+/* ЯРКИЙ ФИОЛЕТОВЫЙ БАННЕР ЦЕЛЕВОГО НАСТАВНИКА (КАК НА 3 СКРИНШОТЕ) */
+.target-mentor-banner {
+    margin-bottom: 35px;
+    font-size: 27px;
+    background: #75248f;
+    /* Плотный фиолетовый фон плашки */
+    color: #ffffff;
+    /* Текст становится белым контрастным */
+    padding: 18px 26px;
+    border-radius: 20px;
+    font-weight: 700;
+    box-shadow: 0 10px 25px -5px rgba(117, 36, 143, 0.25);
+    position: relative;
+    overflow: hidden;
+}
 
- .pairs-title {
-     margin: 0 0 16px 0;
-     font-size: 13px;
-     text-transform: uppercase;
-     color: #64748b;
-     letter-spacing: 0.5px;
-     font-weight: 700;
- }
+/* ИНФО-КАРТОЧКА НАСТАВНИКА */
+/* БАННЕР ЦЕЛЕВОГО НАСТАВНИКА: Глубокий премиальный фиолетовый из брендбука (#8c64d8) */
+.target-mentor-banner {
+    margin-bottom: 30px;
+    font-size: 20px;
+    background: #a371ff;
+    /* Фирменный росмоловский фиолетовый */
+    color: #ffffff;
+    /* Текст белый, контрастный, как на 4 скриншоте */
+    padding: 16px 24px;
+    border-radius: 20px;
+    /* Сильное софт-закругление "Ладоги" */
+    font-weight: 700;
+    box-shadow: 0 10px 25px -5px rgba(140, 100, 216, 0.25);
+    position: relative;
+    overflow: hidden;
+}
 
- .pairs-list {
-     display: flex;
-     flex-direction: column;
-     gap: 12px;
- }
+/* КРАТКАЯ ИНФО-КАРТОЧКА НАСТАВНИКА: Чистый белый парящий остров */
+.info-card-block {
+    border: 2px solid #f1f5f9;
+    border-radius: 24px;
+    padding: 24px;
+    margin-bottom: 20px;
+    background: #ffffff;
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.04);
+    /* Воздушная размытая тень */   
+}
 
- .pair-row {
-     padding: 14px 20px;
-     font-size: 13px;
-     border-radius: 8px;
-     box-sizing: border-box;
- }
+/* БЛОК МОНИТОРИНГА: Лаймовая неоновая лента и фоновый орнамент */
+.monitor-card-block {
+    border: 2px solid #f1f5f9;
+    border-radius: 24px;
+    padding: 24px;
+    margin-bottom: 35px;
+    background: linear-gradient(145deg, #ffffff, rgba(218, 239, 20, 0.01));
+    border-left: 6px solid #bbff7c;
+    /* Точный сочный лайм из брендбука для акцента */
+    box-shadow: 0 15px 35px -10px rgba(218, 239, 20, 0.15);
+    /* Мягкое лаймовое свечение */
+    position: relative;
+    overflow: hidden;
+}
 
- .row-active {
-     border: 1px solid #e2e8f0;
-     display: flex;
-     justify-content: space-between;
-     background: #fff;
-     align-items: center;
-     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.01);
- }
+/* ВКУСОВЩИНА: Абстрактные геометрические завитушки/линии внутри блока прогресса (Как на 5 скриншоте) */
+.monitor-card-block::after {
+    content: 'TRACK';
+    position: absolute;
+    right: -10px;
+    bottom: -15px;
+    font-size: 64px;
+    font-weight: 900;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(140, 100, 216, 0.04);
+    /* Тончайший фиолетовый контур */
+    letter-spacing: 2px;
+    pointer-events: none;
+}
 
- .pair-document {
-     color: #15803d;
-     background: #f0fdf4;
-     padding: 4px 10px;
-     font-size: 11px;
-     font-weight: 700;
-     border-radius: 4px;
- }
+/* НАСТРОЙКА ПОЛЕЙ ВВОДА И ВЫПАДАЮЩИХ СПИСКОВ */
+.form-group {
+    margin-bottom: 29px;
+}
 
- .row-empty {
-     border: 1px dashed #cbd5e1;
-     color: #94a3b8;
-     background: #f8fafc;
- }
+.form-label {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    color: #64748b;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    margin-bottom: 12px;
+}
 
- /* Подвал */
- .cabinet-footer {
-     text-align: center;
-     margin-top: 60px;
-     color: #94a3b8;
-     font-size: 12px;
-     letter-spacing: 0.5px;
-     border-top: 1px solid #e2e8f0;
-     padding-top: 20px;
- }
+.form-input {
+    width: 100%;
+    max-width: 520px;
+    padding: 14px 18px;
+    border: 2px solid #e2e8f0;
+    border-radius: 16px;
+    /* Закругляем инпуты под софт-стиль */
+    font-size: 19px;
+    font-weight: 600;
+    outline: none;
+    box-sizing: border-box;
+    background: #ffffff;
+    transition: all 0.25s ease;
+}
+
+/* Мягкая фиолетовая подсветка при фокусе на выпадающем списке */
+.form-input:focus {
+    border-color: #8c64d8;
+    box-shadow: 0 0 0 4px rgba(140, 100, 216, 0.12);
+}
+
+/* ФОРМЫ */
+.form-group {
+    margin-bottom: 30px;
+}
+
+.form-label {
+    display: block;
+    font-size: 14px;
+    text-transform: uppercase;
+    color: #576b87;
+    font-weight: 900;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+}
+
+.form-input {
+    width: 100%;
+    max-width: 550px;
+    padding: 16px 20px;
+    border: 2px solid #cbd5e1;
+    border-radius: 16px;
+    font-size: 17px;
+    font-weight: 600;
+    outline: none;
+    box-sizing: border-box;
+    background: #ffffff;
+    transition: all 0.25s ease;
+}
+
+.form-input:focus {
+    border-color: #75248f;
+    box-shadow: 0 0 0 4px rgba(117, 36, 143, 0.12);
+}
+
+/* КНОПКА «ПРИКРЕПИТЬ»: Мощный неоново-жёлтый лайм Росмолодёжи (КАК НА 3 СКРИНШОТЕ) */
+.btn-primary {
+    border: none;
+    background: #d1f767;
+    /* Ядовито-жёлтый неон Росмолодёжи! */
+    color: #75248f;
+    /* Фиолетовый текст на жёлтом фоне — пушка контраст! */
+    padding: 18px 40px;
+    font-size: 13px;
+    font-weight: 900;
+    /* Максимально жирный шрифт */
+    cursor: pointer;
+    border-radius: 16px;
+    margin-bottom: 45px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.25s ease;
+    box-shadow: 0 8px 25px rgba(212, 255, 0, 0.35);
+    /* Неоновое свечение кнопки */
+}
+
+.btn-primary:hover {
+    background: #c2ea00;
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(212, 255, 0, 0.5);
+    /* Усиление неона при наведении */
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+/* КНОПКА 1: Главная фиолетовая «Прикрепить к наставнику» с мягким неоном */
+.btn-primary {
+    border: none;
+    background: #6d3ecf;
+    /* Тот самый благородный чернично-фиолетовый с 4 скриншота */
+    color: #ffffff;
+    padding: 17px 36px;
+    font-size: 17px;
+    font-weight: 700;
+    /* Жирный, заметный шрифт */
+    cursor: pointer;
+    border-radius: 16px;
+    /* Ультра-мягкое закругление со скриншота "Ладоги" */
+    margin-bottom: 35px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 14px rgba(109, 62, 207, 0.25);
+    /* Мягкое парящее свечение */
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Плавная анимация */
+}
+
+/* Эффект при наведении курсора на главную кнопку */
+.btn-primary:hover {
+    background: #5b31b3;
+    /* Чуть темнее при наведении */
+    transform: translateY(-2px);
+    /* Кнопка слегка приподнимается (парит) */
+    box-shadow: 0 8px 24px rgba(109, 62, 207, 0.4);
+    /* Усиление мягкого неона */
+}
+
+/* Эффект при клике */
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+
+/* КНОПКА 2: Вторичная контурная «Выгрузить отчет» */
+.btn-secondary {
+    border: 5px solid #6d3ecf;
+    /* Тонкая фиолетовая рамка */
+    background: #ffffff;
+    color: #6d3ecf;
+    padding: 3px 10px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    border-radius: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Эффект при наведении на кнопку отчета (Инверсия со 4 скриншота) */
+.btn-secondary:hover {
+    background: #6d3ecf;
+    /* Полностью заливается фиолетовым */
+    color: #ffffff;
+    /* Текст становится белым */
+    box-shadow: 0 6px 16px rgba(109, 62, 207, 0.2);
+}
+
+
+/* БЛОК ТЕКУЩИХ ПАР ПОДРОСТКОВ */
+.current-pairs-block {
+    border-top: 3px dashed #f1f5f9;
+    padding-top: 35px;
+}
+
+.pairs-title {
+    margin: 0 0 22px 0;
+    font-size: 15px;
+    text-transform: uppercase;
+    color: #516785;
+    letter-spacing: 1px;
+    font-weight: 900;
+}
+
+.pairs-list {
+    display: flex;
+    flex-direction: column;
+    gap: 17px;
+}
+
+.pair-row {
+    padding: 18px 24px;
+    font-size: 17px;
+    border-radius: 18px;
+    box-sizing: border-box;
+}
+
+.row-active {
+    border: 2px solid #f1f5f9;
+    display: flex;
+    justify-content: space-between;
+    background: #ffffff;
+    align-items: center;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.01);
+}
+
+.pair-document {
+    color: #ffffff;
+    background: #75248f;
+    /* Паспортные плашки фиолетовые */
+    padding: 5px 16px;
+    font-size: 15px;
+    font-weight: 800;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(117, 36, 143, 0.15);
+}
+
+.row-empty {
+    border: 2px dashed #cbd5e1;
+    color: #94a3b8;
+    background: #f8fafc;
+    font-weight: 600;
+}
+
+/* ПОДВАЛ */
+.cabinet-footer {
+    text-align: center;
+    margin-top: 80px;
+    color: #94a3b8;
+    font-size: 12px;
+    letter-spacing: 1px;
+    border-top: 2px solid #f1f5f9;
+    padding-top: 28px;
+    font-weight: 600;
+}

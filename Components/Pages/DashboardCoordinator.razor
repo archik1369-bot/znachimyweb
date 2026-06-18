@@ -1,5 +1,7 @@
 @rendermode InteractiveServer
 @page "/dashboard-coordinator"
+<link rel="stylesheet" href="Components/Pages/DashboardCoordinator.razor.css" />
+
 @inject IJSRuntime JSRuntime
 
 <PageTitle>MentoRate – Панель Координатора</PageTitle>
@@ -9,12 +11,13 @@
     <!-- Шапка кабинета -->
     <div class="cabinet-header">
         <div class="user-info">
-            <span class="user-id">ID: 001 | </span>
+            <span class="user-id">ID: 001</span>
             <strong>Пользователь:</strong> @currentCoordinator.FIO (Региональный координатор — Район:
             @currentCoordinator.District)
         </div>
-        <a href="/" class="btn-logout">Выйти</a>
+        <button class="btn-logout">Выйти</button>
     </div>
+
 
     <!-- Основной контент: две колонки -->
     <div class="columns-wrapper">
@@ -67,7 +70,7 @@
                     </div>
                     <div class="summary-row">
                         <span>Свободных слотов:</span> <strong>@FilteredMentors.Sum(m => m.MaxSlots -
-                                                                                                                                                                                                                                                                                                                        m.CurrentSlots)</strong>
+                                                                                                                                                                                                                                                                                                                                                                        m.CurrentSlots)</strong>
                     </div>
                 </div>
             </div>
@@ -89,113 +92,114 @@
 
                     <!-- КРАТКАЯ ИНФО О МЕНТОРЕ -->
                     <div class="info-card-block">
-                        <div
-                            style="font-weight: 700; margin-bottom: 10px; font-size: 14px; color: #0f172a; border-bottom: 1px solid #f1f5f9; padding-bottom: 5px;">
-                            📇 Контактные данные наставника
+                        <h5 class="info-card-title">Контактные данные наставника</h5>
+                        <div class="info-card-row">
+                            <span class="info-card-label">Опыт в проекте:</span>
+                            <strong class="info-card-value">@selectedMentor.Experience</strong>
                         </div>
-                        <div style="color: #475569; font-size: 13px; display: flex; align-items: center; gap: 8px;">
-                            <span>👤</span> Опыт в проекте: <strong style="color: #0f172a;">@selectedMentor.Experience</strong>
+                        <div class="info-card-row">
+                            <span class="info-card-label">Телефон для связи:</span>
+                            <strong class="info-card-value">@selectedMentor.Phone</strong>
                         </div>
-                        <div
-                            style="color: #475569; font-size: 13px; margin-top: 6px; display: flex; align-items: center; gap: 8px;">
-                            <span>📞</span> Телефон: <strong style="color: #0f172a;">@selectedMentor.Phone</strong>
+                        <div class="info-card-row">
+                            <span class="info-card-label">Эл. почта:</span>
+                            <strong class="info-card-value">@selectedMentor.Email</strong>
                         </div>
-                        <div
-                            style="color: #475569; font-size: 13px; margin-top: 6px; display: flex; align-items: center; gap: 8px;">
-                            <span>✉️</span> Эл. почта: <strong
-                            style="color: #0f172a; font-family: monospace;">@selectedMentor.Email</strong>
+                    </div>
+
+                    <!-- БЛОК МОНИТОРИНГА -->
+                    <div class="monitor-card-block">
+                        <h5 class="monitor-card-title">Мониторинг трека пары</h5>
+                        <div class="info-card-row">
+                            <span class="info-card-label">Текущий этап:</span>
+                            <strong class="info-card-value">@selectedMentor.RouteLevel</strong>
+                        </div>
+                        <div class="info-card-row">
+                            <span class="info-card-label">Набрано опыта:</span>
+                            <strong class="info-card-value value-xp">@selectedMentor.ExperiencePoints XP</strong>
+                        </div>
+                        <div class="info-card-row">
+                            <span class="info-card-label">Общий процент успеха:</span>
+                            <strong class="info-card-value"
+                                    style="color: @(selectedMentor.SuccessRate >= 70 ? "#10b981" : "#ef4444")">@selectedMentor.SuccessRate%</strong>
                         </div>
                     </div>
 
 
-                    <!-- БЛОК МОНИТОРИНГА -->
-                    <div class="monitor-card-block">
-                        <div style="font-weight: 700; margin-bottom: 8px; font-size: 14px; color: #16a34a;">📊 Мониторинг трека
-                            пары</div>
-                            <div style="color: #475569; margin-left: 4px;">• Текущий этап: <strong
-                                style="color: #0f172a;">@selectedMentor.RouteLevel</strong></div>
-                                <div style="color: #475569; margin-left: 4px; margin-top: 4px;">• Набрано опыта: <span
-                                    style="color: #16a34a; font-weight: bold;">@selectedMentor.ExperiencePoints XP</span></div>
-                                    <div style="color: #475569; margin-left: 4px; margin-top: 4px;">• Общий процент успеха:
-                                        <span
-                                        style="font-weight: bold; color: @(selectedMentor.SuccessRate >= 70 ? "#16a34a" : "#dc2626")">@selectedMentor.SuccessRate%</span>
-                                    </div>
-                                </div>
 
+                    <!-- Форма ввода данных -->
+                    @if (selectedMentor.CurrentSlots < selectedMentor.MaxSlots)
+                    {
+                        <div class="form-group">
+                            <label class="form-label" style="margin-bottom: 8px;">Шаг 1: Наставляемый подросток (Дети вашего района
+                                без пар)</label>
+                                <select class="form-input" @bind="selectedTeenagerId">
+                                    <option value="0" hidden disabled> -- Выберите ребенка из списка --</option>
+                                    @foreach (var child in FreeTeenagersInDistrict)
+                                    {
+                                        <option value="@child.Id">@child.FIO (ID: @child.Id)</option>
+                                    }
+                                </select>
+                            </div>
 
-                                <!-- Форма ввода данных -->
-                                @if (selectedMentor.CurrentSlots < selectedMentor.MaxSlots)
-                                {
-                                    <div class="form-group">
-                                        <label class="form-label" style="margin-bottom: 8px;">Шаг 1: Наставляемый подросток (Дети вашего района
-                                            без пар)</label>
-                                            <select class="form-input" @bind="selectedTeenagerId">
-                                                <option value="0" hidden disabled> -- Выберите ребенка из списка --</option>
-                                                @foreach (var child in FreeTeenagersInDistrict)
-                                                {
-                                                    <option value="@child.Id">@child.FIO (ID: @child.Id)</option>
-                                                }
-                                            </select>
-                                        </div>
+                            <button class="btn-primary" @onclick="AttachTeenager">Прикрепить к наставнику</button>
 
-                                        <button class="btn-primary" @onclick="AttachTeenager" style="margin-top: 5px;">Прикрепить к
-                                            наставнику</button>
-                                        }
+                        }
                 else
+                        {
+                            <div class="pair-row row-empty"
+                                 style="border: 1px solid #fee2e2; background: #fef2f2; color: #dc2626; margin-bottom: 35px; font-weight: bold;">
+                                ⚠️ У данного наставника заполнены все доступные слоты! Прикрепление невозможно.
+                            </div>
+                        }
+
+                        <!-- Список текущих пар наставника -->
+                        <div class="current-pairs-block">
+                            <h4 class="pairs-title">Текущие подопечные наставника (@selectedMentor.CurrentSlots из
+                                @selectedMentor.MaxSlots)</h4>
+
+                                <div class="pairs-list">
+                                    @{
+                                        int slotIndex = 1;
+                                        foreach (var p in selectedMentor.AssignedTeenagers)
                                         {
-                                            <div class="pair-row row-empty"
-                                                 style="border: 1px solid #fee2e2; background: #fef2f2; color: #dc2626; margin-bottom: 35px; font-weight: bold;">
-                                                ⚠️ У данного наставника заполнены все доступные слоты! Прикрепление невозможно.
-                                            </div>
-                                        }
-
-                                        <!-- Список текущих пар наставника -->
-                                        <div class="current-pairs-block">
-                                            <h4 class="pairs-title">Текущие подопечные наставника (@selectedMentor.CurrentSlots из
-                                                @selectedMentor.MaxSlots)</h4>
-
-                                                <div class="pairs-list">
-                                                    @{
-                                                        int slotIndex = 1;
-                                                        foreach (var p in selectedMentor.AssignedTeenagers)
-                                                        {
-                                                            <div class="pair-row row-active">
-                                                                <span><strong>@slotIndex. @p.FIO</strong> (ID: @p.Id)</span>
-                                                                <div style="display: flex; align-items: center; gap: 10px;">
-                                                                    <span class="pair-document" style="background: #ecfdf5; color: #15803d;">Активен</span>
-                                                                    <button @onclick="() => DetachTeenager(p)" title="Открепить подростка"
-                                                                            style="background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; border-radius: 4px; padding: 2px 6px; font-size: 11px; cursor: pointer; font-weight: bold;">❌</button>
-                                                                </div>
-                                                            </div>
-                                                            slotIndex++;
-
-                                                        }
-                                                        for (int i = selectedMentor.CurrentSlots; i < selectedMentor.MaxSlots; i++)
-                                                        {
-                                                            <div class="pair-row row-empty">
-                                                                @slotIndex. [ Свободный слот под распределение ]
-                                                            </div>
-                                                            slotIndex++;
-                                                        }
-                                                    }
+                                            <div class="pair-row row-active">
+                                                <span><strong>@slotIndex. @p.FIO</strong> (ID: @p.Id)</span>
+                                                <div style="display: flex; align-items: center; gap: 10px;">
+                                                    <span class="pair-document" style="background: #ecfdf5; color: #15803d;">Активен</span>
+                                                    <button @onclick="() => DetachTeenager(p)" title="Открепить подростка"
+                                                            style="background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; border-radius: 4px; padding: 2px 6px; font-size: 11px; cursor: pointer; font-weight: bold;">❌</button>
                                                 </div>
                                             </div>
+                                            slotIndex++;
+
                                         }
-            else
+                                        for (int i = selectedMentor.CurrentSlots; i < selectedMentor.MaxSlots; i++)
                                         {
-                                            <div style="text-align: center; color: #94a3b8; margin-top: 120px; font-size: 15px;">
-                                                👈 Выберите наставника из реестра слева, чтобы управлять распределением и просмотреть сводку.
+                                            <div class="pair-row row-empty">
+                                                @slotIndex. [ Свободный слот под распределение ]
                                             </div>
+                                            slotIndex++;
                                         }
-
-                                    </div>
-                                </div>
-
-                                <!-- Подвал страницы -->
-                                <div class="cabinet-footer">
-                                    [значимый взрослый] • Панель управления распределением пар • 2026
+                                    }
                                 </div>
                             </div>
+                        }
+            else
+                        {
+                            <div style="text-align: center; color: #94a3b8; margin-top: 120px; font-size: 15px;">
+                                👈 Выберите наставника из реестра слева, чтобы управлять распределением и просмотреть сводку.
+                            </div>
+                        }
+
+                    </div>
+                </div>
+
+                <!-- Подвал страницы -->
+                <div class="cabinet-footer">
+                    [значимый взрослый] • Панель управления распределением пар • 2026
+                </div>
+            </div>
 
 
 @code {
