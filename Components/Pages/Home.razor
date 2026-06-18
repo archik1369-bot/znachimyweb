@@ -127,24 +127,28 @@
     <footer class="site-footer">
         <p>MentoRate v1.0 | Единая среда социализации Движения Первых | Техподдержка | 2026</p>
     </footer>
-    @* --- ВСПЛЫВАЮЩЕЕ ОКНО АВТОРИЗАЦИИ (ТОЛЬКО ВХОД) --- *@
+    @* --- ВСПЛЫВАЮЩЕЕ ОКНО АВТОРИЗАЦИИ (ИСПРАВЛЕННЫЙ ВЕРТИКАЛЬНЫЙ ВАРИАНТ) --- *@
     @if (isAuthModalOpen)
     {
         <div class="modal-overlay" @onclick="CloseAuthModal">
-            <div class="modal-content border-box" @onclick:stopPropagation>
+            <div class="modal-content" @onclick:stopPropagation>
+                @* Теперь это маленькая кнопка-крестик в углу *@
                 <button class="btn-close-modal" @onclick="CloseAuthModal">✕</button>
 
                 <h4 class="modal-title">ВХОД В СИСТЕМУ</h4>
-                <div class="auth-form">
-                    <div class="form-group">
+
+                <div class="auth-form-vertical">
+                    <div class="form-group-vertical">
                         <label>Логин или Email</label>
                         <input type="text" @bind="loginUsername" placeholder="Введите ваш логин..." />
                     </div>
-                    <div class="form-group">
+
+                    <div class="form-group-vertical">
                         <label>Пароль</label>
                         <input type="password" @bind="loginPassword" placeholder="Введите ваш пароль..." />
                     </div>
-                    <button class="btn-auth" @onclick="HandleLogin">Войти</button>
+
+                    <button class="btn-auth-modern" @onclick="HandleLogin">Войти</button>
                 </div>
 
                 @if (!string.IsNullOrEmpty(authMessage))
@@ -154,6 +158,7 @@
             </div>
         </div>
     }
+
 
 
 
@@ -446,98 +451,125 @@
             color: #8c64d8;
         }
 
-    /* --- СТИЛЬНАЯ МОДАЛКА АВТОРИЗАЦИИ --- */
+    /* Фоновый оверлей на весь экран */
     .modal-overlay {
         position: fixed;
         top: 0;
         left: 0;
         width: 100vw;
         height: 100vh;
-        background: rgba(15, 23, 42, 0.3); /* Мягкое благородное затемнение */
+        background: rgba(15, 23, 42, 0.4);
         display: flex;
         justify-content: center;
         align-items: center;
-        z-index: 1000;
-        backdrop-filter: blur(4px); /* Легкое размытие заднего плана как на топовых сайтах */
+        z-index: 9999;
+        backdrop-filter: blur(4px);
     }
 
+    /* Белая карточка формы входа */
     .modal-content {
-        background: var(--color-white);
-        width: 100%;
-        max-width: 420px;
-        padding: 40px;
+        background: var(--color-white) !important;
+        width: 90%;
+        max-width: 400px;
+        padding: 40px 30px;
         position: relative;
-        border: none !important;
+        border: 1px solid var(--color-border-light) !important;
         border-radius: 16px;
-        box-shadow: 0 20px 50px rgba(0,0,0,0.15) !important;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.1) !important;
+        margin: 0 auto !important;
+        transform: none !important;
+        box-sizing: border-box;
     }
+
+    /* Маленький аккуратный крестик в правом верхнем углу */
+    .btn-close-modal {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: none !important;
+        border: none !important;
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+        color: #64748b;
+        padding: 5px !important;
+        width: auto !important;
+        height: auto !important;
+    }
+
+        .btn-close-modal:hover {
+            color: var(--color-black);
+        }
 
     .modal-title {
-        font-size: 20px;
-        font-weight: 700;
+        font-size: 22px;
+        font-weight: 800;
         color: var(--color-black);
+        margin-top: 0;
         margin-bottom: 25px;
         text-align: center;
+        letter-spacing: 0.5px;
     }
 
-    .form-group label {
-        font-size: 13px;
-        font-weight: 600;
-        color: #64748b;
-        margin-bottom: 6px;
+    /* Жесткая вертикальная колонка для формы */
+    .auth-form-vertical {
+        display: flex !important;
+        flex-direction: column !important; /* Строго друг под другом */
+        gap: 20px !important;
+        width: 100%;
     }
 
-    .form-group input {
-        padding: 12px;
-        border: 1px solid #cbd5e1;
-        border-radius: 8px;
-        font-size: 14px;
+    /* Настройка группы инпута (надпись + поле) */
+    .form-group-vertical {
+        display: flex !important;
+        flex-direction: column !important; /* Надпись СВЕРХУ, поле СНИЗУ */
+        gap: 6px !important;
+        width: 100%;
+        text-align: left;
     }
 
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--color-violet);
+        .form-group-vertical label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #64748b;
         }
 
-    .btn-auth {
-        background: var(--color-violet);
-        border-radius: 8px;
-        padding: 14px;
-        font-size: 14px;
-        font-weight: 600;
-    }
-
-        .btn-auth:hover {
-            background: #764fc2;
+        .form-group-vertical input {
+            padding: 12px 16px !important;
+            border: 1px solid #cbd5e1 !important;
+            border-radius: 8px !important;
+            font-size: 14px !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+            background: var(--color-white) !important;
+            color: var(--color-black) !important;
         }
 
-    .auth-message {
-        margin-top: 20px;
-        padding: 12px;
-        background: #f8fafc;
-        border-left: 4px solid #ef4444;
-        border-radius: 4px;
-        font-size: 13px;
-        color: #b91c1c;
+            .form-group-vertical input:focus {
+                outline: none !important;
+                border-color: var(--color-violet) !important;
+                box-shadow: 0 0 0 3px rgba(140, 100, 216, 0.1) !important;
+            }
+
+    /* Красивая фиолетовая кнопка "Войти" на всю ширину формы */
+    .btn-auth-modern {
+        background: var(--color-violet) !important;
+        color: var(--color-white) !important;
+        border: none !important;
+        border-radius: 8px !important;
+        padding: 14px !important;
+        font-size: 15px !important;
+        font-weight: 600 !important;
+        cursor: pointer !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        margin-top: 10px !important;
+        transition: background-color 0.2s;
     }
 
-    @@keyframes scrollInfinite {
-        0% {
-            transform: translateX(0);
+        .btn-auth-modern:hover {
+            background-color: #764fc2 !important;
         }
-
-        100% {
-            transform: translateX(-50%);
-        }
-    }
-
-    html {
-        scroll-behavior: smooth;
-    }
-
-    .text-center {
-        text-align: center;
-    }
 </style>
 
 
