@@ -5,288 +5,608 @@
 <PageTitle>MentoRate — Главная</PageTitle>
 
 <div class="landing-container">
+ @* --- ШАПКА САЙТА (ТЕПЕРЬ БЕЗ ПОИСКА) --- *@
+        <header class="site-header">
+            <div class="logo">[значимый взрослый]</div>
+        </header>
 
-    @* --- ШАПКА САЙТА (HEADER) --- *@
-    <header class="site-header">
-        <div class="logo">[значимый взрослый]</div>
-        <div class="search-box">
-            <input type="text" placeholder="Поиск наставника..." />
-            <button>Найти</button>
-        </div>
-    </header>
+        @* --- НАВИГАЦИЯ С РАБОЧИМИ ССЫЛКАМИ --- *@
+        <nav class="site-nav">
+            <div class="nav-links">
+                <a href="/" class="active">Главная</a>
+                <a href="#about">О проекте</a>
+                <a href="#track">Наши наставники</a>
+                <a href="#shop">Магазин наград</a>
+                <a href="#instructions">Инструкции</a>
+            </div>
+            <button class="btn-lk-top" @onclick="GoToLogin">Войти</button>
+        </nav>
 
-    @* --- НАВИГАЦИЯ (NAVBAR) --- *@
-    <nav class="site-nav">
-        <div class="nav-links">
-            <a href="/" class="active">Главная</a>
-            <a href="#">О проекте</a>
-            <a href="#">Цифровой трек</a>
-            <a href="#">Магазин наград</a>
-            <a href="#">Инструкции</a>
-        </div>
-        @* Маленькая и неприметная кнопка входа сбоку, как просили в правках *@
-        <button class="btn-lk-top" @onclick="GoToLogin">Войти</button>
-    </nav>
+        @* --- ОСНОВНОЙ КОНТЕНТ С ЯКОРЯМИ ДЛЯ СКРОЛЛА --- *@
+        <main class="landing-main">
 
-    @* --- ОСНОВНОЙ КОНТЕНТ (ИДЕТ СПЛОШНЫМИ СЛАЙДАМИ СВЕРХУ ВНИЗ) --- *@
-    <main class="landing-main">
+            @* СЛАЙД 1: Главный лозунг *@
+            <section class="hero-block border-box">
+                <h2>ПРОКАЧАЙ СВОИ НАВЫКИ И НАЙДИ ЕДИНОМЫШЛЕННИКОВ</h2>
+                <p class="subtitle">Интерактивная платформа для совместной работы наставников и участников.</p>
+                <p class="description">Развивайтесь вместе, фиксируйте достижения и открывайте новые возможности.</p>
+            </section>
 
-        @* СЛАЙД 1: Главный лозунг (Презентация) *@
-        <section class="hero-block border-box">
-            <h2>ПРОКАЧАЙ СВОИ НАВЫКИ И НАЙДИ ЕДИНОМЫШЛЕННИКОВ</h2>
-            <p class="subtitle">Интерактивная платформа для совместной работы наставников и участников.</p>
-            <p class="description">Развивайтесь вместе, фиксируйте достижения и открывайте новые возможности.</p>
-        </section>
+        @* СЛАЙД 2: Бесконечный ползунок с портретами наставников *@
+        <section id="track" class="slider-section border-box">
+            <h3 class="slider-title">НАШИ НАСТАВНИКИ</h3>
 
-        @* СЛАЙД 2: Масштаб платформы в рамке *@
-        <section class="stats-banner border-box">
-            <h3>МАСШТАБ ПЛАТФОРМЫ</h3>
-            <p class="stats-geo"> Мы находимся в 89 регионах РФ</p>
+            <div class="slider-container">
+                <div class="slider-track">
 
-            <div class="stats-grid">
-                <div class="stats-item">
-                    <span class="stats-number">1 240</span>
-                    <span class="stats-label">всего активных наставников</span>
-                </div>
-                <div class="stats-item">
-                    <span class="stats-number">3 450</span>
-                    <span class="stats-label">всего участников программы</span>
+                    @* Карточки дублируются дважды, чтобы анимация была бесшовной и бесконечной *@
+                    @for (int i = 0; i < 2; i++)
+                    {
+                        <div class="mentor-slide-card">
+                            <div class="mentor-avatar">🧑‍🏫</div>
+                            <h5 class="mentor-slide-name">Иванов П.С.</h5>
+                            <span class="mentor-slide-tag">Старший наставник</span>
+                            <div class="mentor-hover-info">
+                                <p><b>Опыт:</b> 5 лет</p>
+                                <p><b>Специализация:</b> Трудные подростки, профориентация</p>
+                                <p><b>Регион:</b> Москва</p>
+                            </div>
+                        </div>
+
+                        <div class="mentor-slide-card">
+                            <div class="mentor-avatar">👩‍🏫</div>
+                            <h5 class="mentor-slide-name">Петрова А.В.</h5>
+                            <span class="mentor-slide-tag">Куратор трека</span>
+                            <div class="mentor-hover-info">
+                                <p><b>Опыт:</b> 3 года</p>
+                                <p><b>Специализация:</b> Психология, адаптация</p>
+                                <p><b>Регион:</b> СПБ</p>
+                            </div>
+                        </div>
+
+                        <div class="mentor-slide-card">
+                            <div class="mentor-avatar">👨‍💻</div>
+                            <h5 class="mentor-slide-name">Смирнов К.Д.</h5>
+                            <span class="mentor-slide-tag">Наставник-эксперт</span>
+                            <div class="mentor-hover-info">
+                                <p><b>Опыт:</b> 4 года</p>
+                                <p><b>Специализация:</b> IT-кружки, социализация</p>
+                                <p><b>Регион:</b> Казань</p>
+                            </div>
+                        </div>
+
+                        <div class="mentor-slide-card">
+                            <div class="mentor-avatar">👩‍🎨</div>
+                            <h5 class="mentor-slide-name">Козлова М.А.</h5>
+                            <span class="mentor-slide-tag">Медиа-наставник</span>
+                            <div class="mentor-hover-info">
+                                <p><b>Опыт:</b> 6 лет</p>
+                                <p><b>Специализация:</b> Культура, блогинг</p>
+                                <p><b>Регион:</b> Новосибирск</p>
+                            </div>
+                        </div>
+                    }
+
                 </div>
             </div>
         </section>
 
-        @* СЛАЙД 3: Ценности и возможности *@
-        <section class="features-section">
-            <h3 class="section-title">ЦЕННОСТЬ И ВОЗМОЖНОСТИ ПЛАТФОРМЫ</h3>
 
-            <div class="features-grid">
-                <div class="feature-card border-box">
-                    <h5>Наставникам и Подросткам</h5>
-                    <ul>
-                        <li>Наставник заполняет маршрутный лист вместе со своим учеником.</li>
-                        <li>Подросток видит контакты куратора и личную траекторию.</li>
-                        <li>Система защищена от накруток.</li>
-                    </ul>
+            @* СЛАЙД 3: Ценности (О проекте) *@
+            <section id="about" class="features-section">
+                <h3 class="section-title">ЦЕННОСТЬ И ВОЗМОЖНОСТИ ПЛАТФОРМЫ</h3>
+                <div class="features-grid">
+                    <div class="feature-card border-box">
+                        <h5>Наставникам и Подросткам</h5>
+                        <ul>
+                            <li>Наставник заполняет маршрутный лист вместе со своим учементом.</li>
+                            <li>Подросток видит контакты куратора.</li>
+                        </ul>
+                    </div>
+
+                    <div id="shop" class="feature-card border-box">
+                        <h5>Баллы и Магазин наград</h5>
+                        <ul>
+                            <li>Получайте очки опыта за инициативу.</li>
+                            <li>Обменивайте баллы на мерч (стаканы, худи).</li>
+                        </ul>
+                    </div>
                 </div>
+            </section>
 
-                <div class="feature-card border-box">
-                    <h5>Баллы и Магазин наград</h5>
-                    <ul>
-                        <li>Получайте очки опыта за инициативу, активность и помощь другим.</li>
-                        <li>Баланс кошелька отображается в профиле участника.</li>
-                        <li>Обменивайте баллы на мерч (стаканы, худи, спецкурсы).</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
+            @* СЛАЙД 4: Инструкции *@
+            <section id="instructions" class="border-box text-center">
+                <h3>ИНСТРУКЦИИ ДЛЯ ПОЛЬЗОВАТЕЛЕЙ</h3>
+                <p class="description">Памятки, гайды и видео-уроки по работе с цифровым треком вовлечения.</p>
+            </section>
 
-    </main>
+        </main>
+
 
     @* --- ПОДВАЛ (FOOTER) --- *@
     <footer class="site-footer">
         <p>MentoRate v1.0 | Единая среда социализации Движения Первых | Техподдержка | 2026</p>
     </footer>
+    @* --- ВСПЛЫВАЮЩЕЕ ОКНО АВТОРИЗАЦИИ (ТОЛЬКО ВХОД) --- *@
+    @if (isAuthModalOpen)
+    {
+        <div class="modal-overlay" @onclick="CloseAuthModal">
+            <div class="modal-content border-box" @onclick:stopPropagation>
+                <button class="btn-close-modal" @onclick="CloseAuthModal">✕</button>
+
+                <h4 class="modal-title">ВХОД В СИСТЕМУ</h4>
+                <div class="auth-form">
+                    <div class="form-group">
+                        <label>Логин или Email</label>
+                        <input type="text" @bind="loginUsername" placeholder="Введите ваш логин..." />
+                    </div>
+                    <div class="form-group">
+                        <label>Пароль</label>
+                        <input type="password" @bind="loginPassword" placeholder="Введите ваш пароль..." />
+                    </div>
+                    <button class="btn-auth" @onclick="HandleLogin">Войти</button>
+                </div>
+
+                @if (!string.IsNullOrEmpty(authMessage))
+                {
+                    <div class="auth-message">@authMessage</div>
+                }
+            </div>
+        </div>
+    }
+
+
 
 </div>
 
-
-@* --- СТИЛИ СТРАНИЦЫ --- *@
 <style>
+    /* Новая чистая палитра в стиле Молодёжь России */
+    :root {
+        --color-violet: #8c64d8; /* Наш основной Rosmol Violet для кнопок и акцентов */
+        --color-green: #daef14; /* Наш Youth Green для ярких акцентов и плашек */
+        --color-black: #2c2c2c; /* Мягкий темно-серый цвет для текста (вместо едкого черного) */
+        --color-white: #ffffff;
+        --color-bg-light: #f8f9fa; /* Легкий серый фон для некоторых блоков */
+        --color-border-light: #e2e8f0; /* Очень нежные, почти незаметные рамки */
+    }
+
     .landing-container {
-        font-family: Arial, sans-serif;
-        max-width: 1000px; /* Сделали чуть уже для более аккуратного вида презентации */
+        font-family: 'Segoe UI', Arial, sans-serif;
+        max-width: 1200px;
         margin: 0 auto;
         padding: 20px;
-        color: #000;
+        color: var(--color-black);
+        background-color: var(--color-white);
     }
 
+    /* Современные аккуратные карточки со скруглением и мягкой тенью */
     .border-box {
-        border: 1px solid #ccc;
-        padding: 40px 30px; /* Увеличили внутренние отступы как на слайдах */
-        background: #fff;
-        margin-bottom: 30px; /* Отступы между слайдами вниз */
+        border: 1px solid var(--color-border-light);
+        border-radius: 16px; /* Мягкие скругленные углы */
+        padding: 50px 40px;
+        background: var(--color-white);
+        margin-bottom: 30px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03); /* Еле заметная воздушная тень */
     }
 
-    /* Шапка */
+    /* Шапка сайта */
     .site-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 20px;
+        margin-bottom: 15px;
+        padding: 10px 0;
     }
 
     .logo {
-        font-size: 24px;
-        font-weight: bold;
+        font-size: 22px;
+        font-weight: 800;
+        color: var(--color-violet); /* Логотип фиолетовый, как на скрине */
+        text-transform: none;
     }
 
-    .search-box input {
-        padding: 8px 12px;
-        border: 1px solid #ccc;
-        width: 200px;
-    }
-
-    .search-box button {
-        padding: 8px 16px;
-        background: #e0e0e0;
-        border: 1px solid #ccc;
-        cursor: pointer;
-    }
-
-    /* Навигация */
+    /* Прозрачная легкая навигация */
     .site-nav {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        border: 1px solid #ccc;
-        padding: 12px 20px;
+        border-bottom: 1px solid var(--color-border-light);
+        padding: 15px 0;
         margin-bottom: 40px;
-        background: #fff;
+        background: transparent;
     }
 
     .nav-links a {
-        margin-right: 20px;
+        margin-right: 25px;
         text-decoration: none;
-        color: #000;
-        font-weight: bold;
-        font-size: 14px;
+        color: #64748b; /* Красивый приглушенный цвет ссылок */
+        font-weight: 600;
+        font-size: 15px;
+        transition: color 0.2s;
     }
 
-        .nav-links a.active {
-            text-decoration: underline;
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--color-violet);
+            text-decoration: none;
         }
 
-    /* Та самая маленькая неприметная кнопка сбоку */
+    /* Верхняя кнопка "Войти" — аккуратная, фиолетовая со скруглением */
     .btn-lk-top {
-        background: #000;
-        color: #fff;
-        padding: 6px 18px;
+        background: var(--color-violet);
+        color: var(--color-white);
+        padding: 10px 24px;
         border: none;
+        border-radius: 8px; /* Скругление как на кнопках ФГАИС */
         cursor: pointer;
-        font-weight: bold;
-        font-size: 13px;
-        text-transform: uppercase;
+        font-weight: 600;
+        font-size: 14px;
+        transition: background-color 0.2s, transform 0.1s;
     }
 
-    /* Одноколоночный контент */
-    .landing-main {
-        display: flex;
-        flex-direction: column;
-    }
+        .btn-lk-top:hover {
+            background-color: #764fc2; /* Чуть темнее при наведении */
+        }
 
-    /* Слайд 1: Прокачай навыки */
+    /* СЛАЙД 1: Главный баннер (Копируем раскладку со скрина) */
     .hero-block {
-        text-align: center;
+        background: linear-gradient(135deg, #fbfaff 0%, #f5f3ff 100%); /* Очень нежный фиолетовый градиент на фоне */
+        border: none;
+        text-align: left; /* Текст по левому краю */
+        position: relative;
     }
 
         .hero-block h2 {
-            font-size: 26px;
+            font-size: 42px; /* Большой жирный шрифт */
+            font-weight: 900;
+            line-height: 1.2;
             margin-top: 0;
             margin-bottom: 20px;
-            letter-spacing: 0.5px;
+            color: var(--color-black);
         }
+            /* Делаем выделение цветом как на скрине "ВРЕМЯ ВОЗМОЖНОСТЕЙ" */
+            .hero-block h2 span {
+                color: var(--color-violet);
+            }
 
     .subtitle {
-        font-weight: bold;
-        font-size: 16px;
-        margin-bottom: 15px;
+        font-weight: 500;
+        font-size: 18px;
+        color: #475569;
+        margin-bottom: 30px;
+        max-width: 600px;
     }
 
     .description {
-        color: #555;
-        font-size: 14px;
-    }
-
-    /* Слайд 2: Статистика */
-    .stats-banner h3 {
-        font-size: 20px;
-        margin-top: 0;
-        margin-bottom: 15px;
-    }
-
-    .stats-geo {
+        display: inline-block;
+        background: var(--color-violet);
+        color: var(--color-white);
+        padding: 14px 28px;
+        border-radius: 8px;
+        font-weight: 600;
         font-size: 15px;
-        font-weight: bold;
-        margin-bottom: 30px;
+        text-decoration: none;
     }
 
-    .stats-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 30px;
+    /* СЛАЙД 2: Бесконечный ползунок наставников */
+    .slider-section {
+        overflow: hidden;
+        position: relative;
+        padding: 30px 0 !important;
+        border: none;
+        box-shadow: none;
+        background: transparent;
     }
 
-    .stats-item {
-        border-left: 3px solid #000;
-        padding-left: 20px;
+    .slider-title {
+        font-size: 20px;
+        font-weight: 700;
+        margin-left: 10px;
+        margin-bottom: 25px;
+        color: var(--color-black);
     }
 
-    .stats-number {
+    .slider-container {
+        width: 100%;
+        overflow: hidden;
+        display: flex;
+    }
+
+    .slider-track {
+        display: flex;
+        gap: 24px;
+        width: max-content;
+        animation: scrollInfinite 30s linear infinite;
+    }
+
+    .slider-container:hover .slider-track {
+        animation-play-state: paused;
+    }
+
+    /* Мягкие круглые карточки наставников */
+    .mentor-slide-card {
+        width: 200px;
+        border: 1px solid var(--color-border-light);
+        border-radius: 16px;
+        background: var(--color-white);
+        padding: 25px 20px;
+        text-align: center;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+    }
+
+    .mentor-avatar {
         font-size: 36px;
-        font-weight: 900;
-        display: block;
-        margin-bottom: 5px;
+        margin-bottom: 15px;
+        width: 80px;
+        height: 80px;
+        background: #f1f5f9;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
-    .stats-label {
-        font-size: 14px;
-        color: #555;
+    .mentor-slide-name {
+        font-size: 16px;
+        font-weight: 700;
+        margin: 0 0 6px 0;
+    }
+
+    .mentor-slide-tag {
+        font-size: 13px;
+        color: #64748b;
+        font-weight: 500;
+    }
+
+    /* Всплывающее инфо — стильная светлая плашка */
+    .mentor-hover-info {
+        display: none;
+        position: absolute;
+        bottom: 105%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 240px;
+        background: var(--color-white);
+        color: var(--color-black);
+        padding: 16px;
+        border: 1px solid var(--color-border-light);
+        border-radius: 12px;
+        text-align: left;
+        z-index: 100;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    }
+
+        .mentor-hover-info p {
+            margin: 0 0 8px 0;
+            font-size: 13px;
+            line-height: 1.4;
+            color: #475569;
+        }
+
+            .mentor-hover-info p b {
+                color: var(--color-violet);
+            }
+
+    .mentor-slide-card:hover .mentor-hover-info {
+        display: block;
     }
 
     /* Слайд 3: Возможности */
     .features-section {
-        margin-bottom: 50px;
+        margin-bottom: 60px;
     }
 
     .section-title {
-        font-size: 18px;
-        font-weight: bold;
-        border-bottom: 2px solid #000;
+        font-size: 22px;
+        font-weight: 700;
+        margin-bottom: 30px;
         padding-bottom: 10px;
-        margin-bottom: 25px;
+        border-bottom: 2px solid var(--color-bg-light);
     }
 
     .features-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 20px;
+        gap: 24px;
     }
 
-    .feature-card h5 {
-        font-size: 16px;
-        margin-top: 0;
-        margin-bottom: 15px;
-        font-weight: bold;
+    .feature-card {
+        border: 1px solid var(--color-border-light);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.02);
     }
 
-    .feature-card ul {
-        padding-left: 20px;
-        margin: 0;
+        .feature-card h5 {
+            font-size: 18px;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-weight: 700;
+            color: var(--color-violet);
+        }
+
+        .feature-card li {
+            margin-bottom: 12px;
+            font-size: 14px;
+            color: #475569;
+            line-height: 1.5;
+        }
+
+    /* Слайд 4: Инструкции (Используем мягкий Youth Green) */
+    #instructions {
+        background-color: var(--color-white) /* Очень бледный, не едкий зеленый для фона блока */
+        border: 1px solid #f1f5f9;  
+        color: var(--color-black);
+        box-shadow: none;
     }
 
-    .feature-card li {
-        margin-bottom: 10px;
-        font-size: 14px;
-        color: #333;
+        #instructions h3 {
+            margin-top: 0;
+            color: #8c64d8;
+        }
+
+    /* --- СТИЛЬНАЯ МОДАЛКА АВТОРИЗАЦИИ --- */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(15, 23, 42, 0.3); /* Мягкое благородное затемнение */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        backdrop-filter: blur(4px); /* Легкое размытие заднего плана как на топовых сайтах */
     }
 
-    /* Подвал */
-    .site-footer {
+    .modal-content {
+        background: var(--color-white);
+        width: 100%;
+        max-width: 420px;
+        padding: 40px;
+        position: relative;
+        border: none !important;
+        border-radius: 16px;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.15) !important;
+    }
+
+    .modal-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--color-black);
+        margin-bottom: 25px;
         text-align: center;
-        border-top: 1px solid #ccc;
-        padding-top: 20px;
+    }
+
+    .form-group label {
         font-size: 13px;
-        color: #666;
+        font-weight: 600;
+        color: #64748b;
+        margin-bottom: 6px;
+    }
+
+    .form-group input {
+        padding: 12px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        font-size: 14px;
+    }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--color-violet);
+        }
+
+    .btn-auth {
+        background: var(--color-violet);
+        border-radius: 8px;
+        padding: 14px;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+        .btn-auth:hover {
+            background: #764fc2;
+        }
+
+    .auth-message {
+        margin-top: 20px;
+        padding: 12px;
+        background: #f8fafc;
+        border-left: 4px solid #ef4444;
+        border-radius: 4px;
+        font-size: 13px;
+        color: #b91c1c;
+    }
+
+    @@keyframes scrollInfinite {
+        0% {
+            transform: translateX(0);
+        }
+
+        100% {
+            transform: translateX(-50%);
+        }
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    .text-center {
+        text-align: center;
     }
 </style>
 
+
 @code {
+    // Управление модальным окном
+    private bool isAuthModalOpen = false;
+    private string authMessage = "";
+
+    // Поля ввода на форме
+    private string loginUsername = "";
+    private string loginPassword = "";
+
     private void GoToLogin()
     {
-        // Пока временно перекидываем в кабинет наставника
-        Navigation.NavigateTo("/Dashboard-mentor");
+        isAuthModalOpen = true;
+        authMessage = "";
+        loginUsername = "";
+        loginPassword = "";
+    }
+
+    private void CloseAuthModal()
+    {
+        isAuthModalOpen = false;
+    }
+
+    private void HandleLogin()
+    {
+        // 1. Проверяем, что поля вообще заполнены
+        if (string.IsNullOrWhiteSpace(loginUsername) || string.IsNullOrWhiteSpace(loginPassword))
+        {
+            authMessage = "Заполните все поля!";
+            return;
+        }
+
+        // Принудительно переводим ввод в нижний регистр, чтобы не было проблем с большими буквами
+        string user = loginUsername.Trim().ToLower();
+        string pass = loginPassword.Trim();
+
+        // 2. СВЕРЯЕМ С НАШЕЙ ТЕСТОВОЙ БАЗОЙ ДАННЫХ
+
+        // Вариант А: Заходит Бедося (Студент)
+        if (user == "student" && pass == "student")
+        {
+            isAuthModalOpen = false;
+            Navigation.NavigateTo("/dashboard-student");
+            return;
+        }
+
+        // Вариант Б: Заходит Наставник
+        if (user == "mentor" && pass == "mentor")
+        {
+            isAuthModalOpen = false;
+            Navigation.NavigateTo("/dashboard-mentor");
+            return;
+        }
+
+        // Вариант В: Заходит Координатор (Главный админ)
+        if (user == "admin" && pass == "admin")
+        {
+            isAuthModalOpen = false;
+            Navigation.NavigateTo("/Dashboard-Coordinator");
+            return;
+        }
+
+        // Если ни один логин/пароль не подошел
+        authMessage = "Неверный логин или пароль! Попробуйте еще раз.";
     }
 }
+
 
     
             
