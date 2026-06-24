@@ -37,7 +37,7 @@
             </div>
 
             <div class="border-box">
-                <h5 class="col-title">🏆 ОБЩИЙ ЗАЧЕТ НАСТАВНИКОВ</h5>
+                <h5 class="col-title"> ОБЩИЙ ЗАЧЕТ НАСТАВНИКОВ</h5>
                 <p class="score-text">Мои баллы за квартал: <b>340 очков</b></p>
             </div>
         </aside>
@@ -543,21 +543,37 @@
     margin-bottom: 20px;
 }
 
-/* Верхняя панель */
-.mentor-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
+    /* Верхняя панель наставника в новом светлом стиле */
+    .mentor-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px 20px;
+        margin-bottom: 25px;
+        background-color: #f8f9fa; /* Легкий серый фон как у бедоси */
+        border: 1px solid #e2e8f0; /* Нежная светлая рамка */
+        border-radius: 12px; /* Мягкое скругление */
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+    }
 
-.btn-logout {
-    color: #f44336;
-    font-weight: bold;
-    text-decoration: none;
-    border: 1px solid #ccc;
-    padding: 5px 15px;
-}
+    /* Кнопка Выйти — аккуратная, приглушенная */
+    .btn-logout {
+        color: #64748b;
+        font-weight: 600;
+        text-decoration: none;
+        border: 1px solid #e2e8f0;
+        background: #fff;
+        padding: 8px 18px;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: color 0.2s, border-color 0.2s;
+    }
+
+        .btn-logout:hover {
+            color: #ef4444; /* Краснеет при наведении */
+            border-color: #fca5a5;
+        }
+
 
 /* Сетка на две колонки */
 .mentor-grid {
@@ -566,38 +582,60 @@
     gap: 20px;
 }
 
-.col-title {
-    font-size: 14px;
-    margin: 0 0 15px 0;
-    font-weight: bold;
-    letter-spacing: 0.5px;
-}
+    /* Общие настройки для заголовков блоков в левой колонке */
+    .col-title {
+        font-size: 14px;
+        margin: 0 0 15px 0;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #64748b; /* Приглушенный стальной цвет для заголовков */
+    }
 
-.student-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
+    /* Контейнер списка */
+    .student-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px; /* Чуть увеличили зазор между детьми */
+    }
 
-.student-item {
-    padding: 12px;
-    border: 1px solid #eee;
-}
+    /* Карточка подростка (обычное состояние) */
+    .student-item {
+        padding: 14px 16px;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px; /* Мягкое скругление углов */
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        cursor: pointer;
+        transition: border-color 0.2s, background-color 0.2s;
+    }
 
-.student-item.active {
-    border: 1px solid #000;
-    background: #f9f9f9;
-    font-weight: bold;
-}
+        /* Эффект наведения на ребенка */
+        .student-item:hover {
+            border-color: #cbd5e1;
+            background-color: #f8fafc;
+        }
 
-.text-muted {
-    opacity: 0.5;
-}
+        /* Выбранный активный подросток (Акцент на фиолетовый) */
+        .student-item.active {
+            border: 1px solid var(--color-violet, #8c64d8) !important;
+            background-color: #f5f3ff !important; /* Очень нежный фиолетовый фон плашки */
+            font-weight: 600;
+        }
 
-.score-text {
-    margin: 0;
-    font-size: 14px;
-}
+            .student-item.active .student-name {
+                color: var(--color-violet, #8c64d8);
+            }
+
+    /* Текст прогресса внутри карточки */
+    .student-progress {
+        font-size: 12px;
+        color: #64748b;
+        font-weight: 500;
+    }
+
 
 /* Правая часть */
 .ml-header {

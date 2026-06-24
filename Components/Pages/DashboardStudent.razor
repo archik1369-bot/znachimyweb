@@ -1,197 +1,478 @@
 ﻿@page "/dashboard-student"
+@rendermode InteractiveServer
 
-<PageTitle>MentoRate — Кабинет Наставляемого</PageTitle>
+<PageTitle>MentoRate — Кабинет Участника</PageTitle>
 
 <div class="lk-container">
 
-    @* --- ПАНЕЛЬ КУРАТОРА --- *@
+    @* --- ПАНЕЛЬ КУРАТОРА С КНОПКОЙ SOS --- *@
     <div class="mentor-panel border-box">
-        🤝 <b>Мой куратор:</b> Иванов Павел Сергеевич (<b>Контакты:</b> p.ivanov@@mentor.ru)
+        <div class="mentor-info-left">
+            <span class="mentor-icon">🤝</span>
+            <div class="mentor-text">
+                <b>Мой куратор:</b> Иванов Павел Сергеевич <span class="divider-v">|</span> <b>Контакты:</b> <a href="mailto:p.ivanov@mentor.ru">p.ivanov@mentor.ru</a>
+            </div>
+        </div>
+
+        @*  кнопка SOS на случай, если наставник ахуел *@
+        <div class="mentor-sos-right">
+            <a href="tel:88005553535" class="btn-sos-line" title="Если наставник нарушает правила или не выходит на связь">
+                🚨 Экстренная линия поддержки: <b>8 (800) 555-35-35</b>
+            </a>
+        </div>
     </div>
+
 
     @* --- ДВУХКОЛОНОЧНЫЙ МАКЕТ --- *@
     <div class="lk-grid">
 
-        @* ЛЕВАЯ КОЛОНКА: КАРТА ДОСТИЖЕНИЙ *@
-        <section class="lk-column">
-            <h3 class="column-title">🗺️ Моя карта достижений (Чтение)</h3>
-
-            @* Уровень 1 (Пройдено) *@
-            <div class="level-card level-passed">
-                <h5>Пройдено: Уровень 1 (Я для себя)</h5>
-                <p>Очки опыта успешно зачислены</p>
-            </div>
-
-            @* Уровень 2 (В процессе) *@
-            <div class="level-card level-process">
-                <h5>В процессе: Уровень 2 (Для семьи)</h5>
-                <p>Ожидание фиксации куратором</p>
-            </div>
-
-            @* Уровень 3 (Блокировка) *@
-            <div class="level-card level-locked">
-                <h5>Блокировка: Уровень 3 (Для мира)</h5>
-                <p>Последовательный переход</p>
-            </div>
-        </section>
-
-        @* ПРАВАЯ КОЛОНКА: БАЛАНС И МАГАЗИН *@
-        <aside class="lk-column">
+        @* ЛЕВАЯ КОЛОНКА (БАЛАНС, МАГАЗИН, КАРТА ДОСТИЖЕНИЙ) *@
+        <aside class="lk-column-left">
 
             @* Блок баланса *@
-            <div class="balance-card border-box">
-                🍓 <b>Баланс очков опыта</b>
-                <div class="balance-count">Счет: @StudentPoints баллов</div>
+            <div class="balance-card">
+                <span class="balance-title">БАНК ОЧКОВ ОПЫТА</span>
+                <div class="balance-count">@StudentPoints <span>баллов</span></div>
             </div>
 
-            <h4 class="shop-title">🛍️ Магазин наград:</h4>
-
-            @* Товар 1 (Доступно) *@
-            <div class="product-card border-box @(StudentPoints >= 300 ? "prod-available" : "prod-locked")">
-                <p><b>Товар:</b> Брендированный стакан</p>
-                <p><b>Стоимость:</b> 300 очков опыта</p>
-                <span class="status-text">[ Отображение: Доступно ]</span>
+            @* карта достижений *@
+            <div class="border-box mb-25">
+                <h3 class="column-title">🗺️ Мой прогресс</h3>
+                <div class="level-status-mini">
+                    <p class="status-row"><b>Уровень 1:</b> <span class="text-success">Пройдено</span></p>
+                    <p class="status-row"><b>Уровень 2:</b> <span class="text-violet">В процессе</span></p>
+                    <p class="status-row"><b>Уровень 3:</b> <span class="text-violet">В процессе</span></p>
+                </div>
             </div>
 
-            @* Товар 2 (Недостаточно) *@
-            <div class="product-card border-box @(StudentPoints >= 800 ? "prod-available" : "prod-locked")">
-                <p><b>Товар:</b> Фирменное оверсайз худи</p>
-                <p><b>Стоимость:</b> 800 очков опыта</p>
-                <span class="status-text">[ Отображение: Недостаточно ]</span>
+
+            @* Магазин наград *@
+            <h4 class="shop-title">Магазин наград</h4>
+            <div class="shop-products-grid">
+                <div class="product-card border-box @(StudentPoints >= 300 ? "prod-available" : "prod-locked")">
+                    <div class="prod-info">
+                        <div class="prod-icon-bg">🥛</div>
+                        <div class="prod-details">
+                            <h5>Брендированный стакан</h5>
+                            <p>Стоимость: <b>300 очков</b></p>
+                        </div>
+                    </div>
+                    <div class="prod-status status-available">Доступно для обмена</div>
+                </div>
+
+                <div class="product-card border-box @(StudentPoints >= 800 ? "prod-available" : "prod-locked")">
+                    <div class="prod-info">
+                        <div class="prod-icon-bg">🧥</div>
+                        <div class="prod-details">
+                            <h5>Фирменное оверсайз худи</h5>
+                            <p>Стоимость: <b>800 очков</b></p>
+                        </div>
+                    </div>
+                    <div class="prod-status status-locked">Недостаточно очков</div>
+                </div>
             </div>
 
         </aside>
+
+        @* ПРАВАЯ КОЛОНКА (МАРШРУТНЫЙ ЛИСТ НА ВСЮ ВЫСОТУ) *@
+        <main class="lk-column-right border-box">
+            <h3 class="column-title" style="border-left-color: var(--color-violet);">📋 Мой цифровой маршрутный лист</h3>
+            <p class="section-desc">Ниже представлены актуальные задачи и цели на текущий квартал, утвержденные вашим куратором.</p>
+
+            @* --- УРОВЕНЬ 1 --- *@
+            <div class="ml-level-block">
+                <h5 class="ml-level-name">Уровень 1. Я для себя</h5>
+                <table class="ml-table-view">
+                    <thead>
+                        <tr>
+                            <th>Что планируем</th>
+                            <th>Как осуществляем</th>
+                            <th style="width: 100px;">Дата</th>
+                            <th style="width: 80px;">Баллы</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="text" value="Запись в кружок Чтения" class="table-input-view" disabled /></td>
+                            <td><input type="text" value="Посетить библиотеку им. Пушкина" class="table-input-view" disabled /></td>
+                            <td><input type="text" value="15.01.2026" class="table-input-view text-center" disabled /></td>
+                            <td><span class="badge-points">10 б</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            @* --- УРОВЕНЬ 2 --- *@
+            <div class="ml-level-block mt-25">
+                <h5 class="ml-level-name">Уровень 2. Для семьи и друзей</h5>
+                <table class="ml-table-view">
+                    <thead>
+                        <tr>
+                            <th>Что планируем</th>
+                            <th>Как осуществляем</th>
+                            <th style="width: 100px;">Дата</th>
+                            <th style="width: 80px;">Баллы</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="text" value="Поход в кино с мамой" class="table-input-view" disabled /></td>
+                            <td><input type="text" value="Купить 2 билета на выходные" class="table-input-view" disabled /></td>
+                            <td><input type="text" value="22.01.2026" class="table-input-view text-center" disabled /></td>
+                            <td><span class="badge-points">20 б</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            @* --- УРОВЕНЬ 3 --- *@
+            <div class="ml-level-block mt-25">
+                <h5 class="ml-level-name">Уровень 3. Для мира (Проект / Дело)</h5>
+                <table class="ml-table-view">
+                    <thead>
+                        <tr>
+                            <th>Что планируем</th>
+                            <th>Как осуществляем</th>
+                            <th style="width: 100px;">Дата</th>
+                            <th style="width: 80px;">Баллы</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="text" value="Помощь приюту животных" class="table-input-view" disabled /></td>
+                            <td><input type="text" value="Собрать старые вещи на подстилки" class="table-input-view" disabled /></td>
+                            <td><input type="text" value="" class="table-input-view text-center" placeholder="Не назначено" disabled /></td>
+                            <td><span class="badge-points">40 б</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+
     </div>
 
+    @* --- ПОДВАЛ С ВЫХОДОМ --- *@
     <footer class="lk-footer">
-        <a href="/" class="btn-exit">[ Выйти из кабинета ]</a>
+        <a href="/" class="btn-exit">Выйти из личного кабинета</a>
     </footer>
 </div>
 
-@* --- СТИЛИ ДЛЯ СОБЛЮДЕНИЯ ЧЕРНО-БЕЛОГО СТИЛЯ --- *@
 <style>
+    :root {
+        --color-violet: #8c64d8;
+        --color-green: #daef14;
+        --color-green-light: #f9fdf0;
+        --color-black: #2c2c2c;
+        --color-white: #ffffff;
+        --color-gray-bg: #f8f9fa;
+        --color-border-light: #e2e8f0;
+        --color-text-muted: #64748b;
+    }
+
     .lk-container {
-        font-family: Arial, sans-serif;
-        max-width: 1100px;
-        margin: 30px auto;
-        padding: 20px;
-        color: #000;
+        font-family: 'Segoe UI', Arial, sans-serif;
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 0 20px;
+        color: var(--color-black);
     }
 
-    /* Общая рамка, как на главной */
     .border-box {
-        border: 1px solid #ccc;
-        padding: 15px 20px;
-        background-color: #fff;
-        margin-bottom: 15px;
+        border: 1px solid var(--color-border-light);
+        border-radius: 12px;
+        padding: 20px;
+        background-color: var(--color-white);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
     }
 
-    /* Шапка куратора */
+    .mb-25 {
+        margin-bottom: 25px;
+    }
+
+    .mt-25 {
+        margin-top: 25px;
+    }
+
+    /* Панель куратора */
+    /* Верхняя панель куратора — теперь раздвигается по краям */
     .mentor-panel {
-        font-size: 15px;
+        display: flex;
+        justify-content: space-between; /* Раздвигаем инфу влево, SOS вправо */
+        align-items: center;
+        gap: 15px;
+        background-color: var(--color-gray-bg);
+        border: 1px solid var(--color-border-light);
+        border-radius: 12px;
+        padding: 16px 20px;
     }
 
-    /* Сетка на две колонки */
+    .mentor-info-left {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    /* Стилизация экстренной линии */
+    .btn-sos-line {
+        font-size: 13px;
+        color: #b91c1c; /* Строгий красный цвет */
+        background: #fef2f2; /* Легкий нежный розовато-красный фон плашки */
+        border: 1px solid #fee2e2;
+        padding: 6px 14px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: background-color 0.2s, color 0.2s;
+    }
+
+        .btn-sos-line:hover {
+            background: #fee2e2; /* Чуть темнее при наведении */
+            color: #991b1b;
+        }
+
+        .btn-sos-line b {
+            font-weight: 700;
+            text-decoration: underline; /* Подчеркиваем номер, чтобы было понятно, что он кликабельный */
+        }
+
+
+    /* --- НОВАЯ СЕТКА ПО ШАБЛОНУ НАСТАВНИКА --- */
     .lk-grid {
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 30px;
-        margin-top: 20px;
+        grid-template-columns: 320px 1fr; /* Левая колонка фиксированная, правая широкая */
+        gap: 25px;
+        margin-top: 25px;
+    }
+    /* Даём маршрутному листу справа дышать и раздвигаем отступы */
+    main.lk-column-right {
+        padding: 35px 30px !important; /* Увеличиваем внутренние отступы во все стороны */
+        background: var(--color-white);
+        display: flex;
+        flex-direction: column;
+        gap: 25px; /* Автоматический красивый зазор между уровнями */
+    }
+
+
+    .column-title, .shop-title {
+        font-size: 18px;
+        font-weight: 700;
+        margin-top: 0;
+        margin-bottom: 20px;
+        color: var(--color-black);
     }
 
     .column-title {
-        font-size: 18px;
-        margin-bottom: 20px;
-        font-weight: bold;
+        border-left: 4px solid var(--color-violet);
+        padding-left: 10px;
     }
 
-    /* Карточки уровней (Левая колонка) */
-    .level-card {
-        border: 1px solid #ccc;
+    .section-desc {
+        font-size: 13px;
+        color: var(--color-text-muted);
+        margin-bottom: 25px;
+        margin-top: -15px;
+    }
+
+    /* Мини-статус прогресса слева */
+    .level-status-mini {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .status-row {
+        margin: 0;
+        font-size: 14px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .text-success {
+        color: #16a34a;
+        font-weight: 600;
+    }
+
+    .text-violet {
+        color: var(--color-violet);
+        font-weight: 600;
+    }
+
+    /* Банк баллов слева */
+    .balance-card {
+        background-color: var(--color-green-light);
+        border: 1px solid #e1f299;
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+        margin-bottom: 25px;
+    }
+
+    .balance-title {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        color: #65a30d;
+        display: block;
+    }
+
+    .balance-count {
+        font-size: 28px;
+        font-weight: 800;
+        margin-top: 5px;
+        color: var(--color-black);
+    }
+
+        .balance-count span {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--color-text-muted);
+        }
+
+    /* Магазин наград слева */
+    .shop-products-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .product-card {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
         padding: 15px;
-        margin-bottom: 15px;
     }
-    .level-card h5 {
-        margin: 0 0 5px 0;
-        font-size: 15px;
-        font-weight: bold;
+
+    .prod-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
     }
-    .level-card p {
+
+    .prod-icon-bg {
+        font-size: 20px;
+        background: var(--color-gray-bg);
+        width: 44px;
+        height: 44px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--color-border-light);
+    }
+
+    .product-card h5 {
+        margin: 0 0 2px 0;
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    .product-card p {
+        margin: 0;
+        font-size: 12px;
+        color: var(--color-text-muted);
+    }
+
+    .prod-status {
+        font-size: 11px;
+        font-weight: 700;
+        text-align: right;
+        border-top: 1px solid #f1f5f9;
+        padding-top: 8px;
+    }
+
+    .status-available {
+        color: #16a34a;
+    }
+
+    .status-locked {
+        color: #94a3b8;
+    }
+
+    .prod-locked {
+        opacity: 0.6;
+    }
+
+    /* --- ТАБЛИЦЫ МАРШРУТНОГО ЛИСТА СПРАВА --- */
+    .ml-level-name {
+        font-size: 14px;
+        font-weight: 700;
+        margin: 0 0 10px 0;
+        color: var(--color-violet);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .ml-table-view {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .ml-table-view th, .ml-table-view td {
+            border: 1px solid var(--color-border-light);
+            padding: 12px 14px !important; /* Делаем ячейки повыше и просторнее */
+            font-size: 13px;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+
+        .ml-table-view th {
+            background: var(--color-gray-bg);
+            font-weight: 600;
+            color: var(--color-text-muted);
+        }
+
+    .table-input-view {
+        width: 100%;
+        border: none !important;
+        background: transparent !important;
+        padding: 0;
         margin: 0;
         font-size: 13px;
+        color: var(--color-black) !important;
+        cursor: default;
     }
 
-    /* Специфические статусы для уровней (аккуратные черно-белые маркеры) */
-    .level-passed {
-        border-left: 5px solid #000; /* Пройден — жирная черная черта */
-        background-color: #f9f9f9;
-    }
-    .level-process {
-        border-left: 5px solid #888; /* В процессе — серая черта */
-        background-color: #fff;
-    }
-    .level-locked {
-        border-left: 5px solid #eee; /* Заблокирован — бледная черта */
-        background-color: #fff;
-        color: #999;
-    }
-
-    /* Правая колонка: Баланс и магазин */
-    .balance-card {
+    .badge-points {
+        background: #fef08a;
+        color: #854d0e;
+        padding: 3px 6px;
+        border-radius: 4px;
+        font-weight: 700;
+        font-size: 11px;
+        display: block;
         text-align: center;
-        background-color: #f9f9f9;
+        width: 100%;
+        box-sizing: border-box;
     }
-    .balance-count {
-        font-size: 20px;
-        font-weight: bold;
-        margin-top: 5px;
+
+    .text-center {
+        text-align: center;
     }
-    .shop-title {
-        font-size: 16px;
-        margin: 25px 0 15px 0;
-        font-weight: bold;
+
+    /* Подвал */
+    .lk-footer {
+        margin-top: 50px;
+        border-top: 1px solid var(--color-border-light);
+        padding-top: 20px;
+        text-align: center;
     }
-    .product-card {
+
+    .btn-exit {
+        color: var(--color-text-muted);
+        text-decoration: none;
+        font-weight: 600;
         font-size: 14px;
     }
-    .product-card p {
-        margin: 0 0 5px 0;
-    }
-    .status-text {
-        font-size: 12px;
-        font-weight: bold;
-        display: block;
-        margin-top: 10px;
-    }
 
-    /* Стилизация доступности товаров */
-    .prod-available .status-text {
-        color: #000;
-    }
-    .prod-locked {
-        opacity: 0.5; /* Недоступный товар слегка затеняем */
-    }
-    .prod-locked .status-text {
-        color: #666;
-    }
-
-    /* Кнопка выхода */
-    .lk-footer {
-        margin-top: 40px;
-        text-align: center;
-    }
-    .btn-exit {
-        color: #000;
-        text-decoration: none;
-        font-weight: bold;
-    }
-    .btn-exit:hover {
-        text-decoration: underline;
-    }
+        .btn-exit:hover {
+            color: var(--color-violet);
+        }
 </style>
 
+
 @code {
-    // Количество баллов у ученика (как на твоем макете)
+    // Тестовый баланс "бедоси"
     private int StudentPoints = 600;
 }
-
